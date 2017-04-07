@@ -15,11 +15,19 @@ public class Board {
 	}
 	
 	public void flipPieces(Board current, Move move){
-		for(int r=move.getRow()-1;r<=(move.getRow()+1);r++){
+		for(int r= move.getRow()-1;r<=(move.getRow()+1);r++){
 			for(int c=move.getCol()-1;c<=(move.getCol()+1);c++){
 				//Im in my room if'n you wanna come and work in the same room.
 				if(current[r][c]!=/*char rep nothing there*/&& !=current.get)
 			}
 		}
+	}
+	
+	public boolean isInBoard(int r, int c) {
+		//Check if a position is valid in the board
+		if(c < 0 || r < 0 || c >= numCols || r >= numRows){
+			return false;
+		}
+		return true;
 	}
 }
