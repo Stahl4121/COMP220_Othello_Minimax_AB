@@ -14,10 +14,11 @@ public class Board {
 		}
 	}
 	
-	public void flipPieces(Move move){
+	public void flipPieces(Board current, Move move){
 		for(int r=move.getRow()-1;r<=(move.getRow()+1);r++){
 			for(int c=move.getCol()-1;c<=(move.getCol()+1);c++){
 				//Im in my room if'n you wanna come and work in the same room.
+				if()
 			}
 		}
 	}
