@@ -18,7 +18,7 @@ public class Board {
 	public void flipPieces(Board current, Move move){
 		for(int r= move.getRow()-1;r<=(move.getRow()+1);r++){
 			for(int c=move.getCol()-1;c<=(move.getCol()+1);c++){
-				if(isInBoard(r,c)/*&&current[r][c]!=enum rep nothing there*/
+				if(isInBoard(r,c)&&current.board[r][c]!=SquareStatus.EMPTY
 						&& current.board[r][c]!=current.board[move.getRow()][move.getCol()]){
 					boolean flip = isEndCapped(current, r-1, c-1, r, c);
 					//TODO
@@ -42,7 +42,7 @@ public class Board {
 		else if(current.board[r][c]==current.board[r+rr][c+cr]){
 			return(isEndCapped(current,rr,cr,r+rr,c+cr));
 		}
-		else if(current.board[r][c]==/*enum rep nothing there*/){
+		else if(current.board[r][c]==SquareStatus.EMPTY){
 			return false;
 		}
 		return true;
