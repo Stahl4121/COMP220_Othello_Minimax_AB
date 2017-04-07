@@ -18,7 +18,7 @@ public class Board {
 		for(int r=move.getRow()-1;r<=(move.getRow()+1);r++){
 			for(int c=move.getCol()-1;c<=(move.getCol()+1);c++){
 				//Im in my room if'n you wanna come and work in the same room.
-				if()
+				if(current[r][c]!=/*char rep nothing there*/&& !=current.get)
 			}
 		}
 	}
