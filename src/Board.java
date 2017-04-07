@@ -1,10 +1,10 @@
 
 public class Board {
-	public char[][] board;
+	public SquareStatus[][] board;
 	final int BOARD_SIZE = 8;
 	
 	public Board(){			//original
-		board=new char[BOARD_SIZE][BOARD_SIZE];
+		board=new SquareStatus[BOARD_SIZE][BOARD_SIZE];
 	}
 	
 	public Board(Board other){
@@ -20,7 +20,7 @@ public class Board {
 			for(int c=move.getCol()-1;c<=(move.getCol()+1);c++){
 				if(isInBoard(r,c)/*&&current[r][c]!=enum rep nothing there*/
 						&& current.board[r][c]!=current.board[move.getRow()][move.getCol()]){
-					boolean flip = endCapped(current, r-1, c-1, r, c);
+					boolean flip = isEndCapped(current, r-1, c-1, r, c);
 					//TODO
 				}
 			}
@@ -35,16 +35,32 @@ public class Board {
 		return true;
 	}
 	
-	public boolean endCapped(Board current, int rr, int cr, int r, int c){		//rr=row relative; cr= column relative
+	public boolean isEndCapped(Board current, int rr, int cr, int r, int c){		//rr=row relative; cr= column relative
 		if(!isInBoard(r,c)){
 			return false;
 		}
 		else if(current.board[r][c]==current.board[r+rr][c+cr]){
-			return(endCapped(current,rr,cr,r+rr,c+cr));
+			return(isEndCapped(current,rr,cr,r+rr,c+cr));
 		}
 		else if(current.board[r][c]==/*enum rep nothing there*/){
 			return false;
 		}
 		return true;
+	}
+	
+	public boolean isLegalMove(Move move){
+		
+		if( !(isInBoard(move.getRow(), move.getCol())) ){
+			return false;
+		}
+		
+		if(board[move.getRow()][move.getCol()] != SquareStatus.EMPTY){
+			return false;
+		}
+		
+		
+		
+		
+		return false;
 	}
 }
