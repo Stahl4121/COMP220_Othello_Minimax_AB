@@ -1,65 +1,53 @@
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class Board {
-	private SquareStatus[][] board;	
+	public SquareStatus[][] board;	
 	final int BOARD_SIZE = 8;
-	public ArrayList<int[]> criticalPieces;
+	ArrayList<int[]> criticalPieces;
 
-
+	
 	public Board(){	
-		board = new SquareStatus[BOARD_SIZE][BOARD_SIZE];
-
-		for(int r = 0; r < BOARD_SIZE; r++){
-			for(int c = 0; c < BOARD_SIZE; c++){
-				this.board[r][c] = SquareStatus.EMPTY;
-			}
-		}
-		
-		this.board[3][3] = SquareStatus.WHITE;
-		this.board[4][4] = SquareStatus.WHITE;
-		this.board[3][4] = SquareStatus.BLACK;
-		this.board[4][3] = SquareStatus.BLACK;
-		
-
+		board=new SquareStatus[BOARD_SIZE][BOARD_SIZE];
 		criticalPieces = new ArrayList<int[]>();
 	}
-
+	
 	public Board(Board other){
-		for(int r = 0; r < BOARD_SIZE; r++){
-			for(int c = 0; c < BOARD_SIZE; c++){
-				this.board[r][c] = other.board[r][c];
+		for(int r=0;r<BOARD_SIZE;r++){
+			for(int c=0;c<BOARD_SIZE;c++){
+				this.board[r][c]= other.board[r][c];
 			}
 		}
-
+		
 		criticalPieces = new ArrayList<int[]>();
 	}
-
+	
 	public void makeMove(Move move) throws Exception{
 		if(! (isLegalMove(move))){
 			throw new Exception ("Invalid move.");
 		}
-
+		
 		board[move.getRow()][move.getCol()] = move.getColor();	
-
+		
 		for(int[] coords : criticalPieces){
 			flipPieces(coords[0]-move.getRow(), coords[1]-move.getCol(), coords[0], coords[1]);
 		}
 	}
-
-
+	
+	
 	public void findCriticalPieces(Move move){
-
+		
 		//ArrayList<int[]> criticalPieces = new ArrayList<int[]>();
 		criticalPieces = new ArrayList<int[]>();
-
+		
 		for(int r = move.getRow()-1; r <= (move.getRow() + 1); r++){
 			for(int c = move.getCol()-1; c <= (move.getCol() + 1); c++){
-
+				
 				if(r == move.getRow() && c == move.getCol() ){
 					c++;
 				}
-
-				if(isInBoard(r,c) && board[r][c]!=SquareStatus.EMPTY && board[r][c] != move.getColor()){
+				
+				if(isInBoard(r,c) && board[r][c]!=SquareStatus.EMPTY && board[r][c]!=board[move.getRow()][move.getCol()]){
 					boolean isCritPiece = isEndCapped(r-move.getRow(), c-move.getCol(), r, c);
 					if (isCritPiece){
 						criticalPieces.add(new int[]{r, c});
@@ -70,17 +58,16 @@ public class Board {
 			}
 		}
 	}
-
+	
 	public void flipPieces(int rr, int cr, int r, int c){
 		if(board[r][c] == board[r+rr][c+cr] ){
 			board[r][c] = board[r-rr][c-cr];
 			flipPieces(rr, cr, r+rr, c+cr);
 		}
-		else{
-			board[r][c] = board[r-rr][c-cr];
-		}		
+		
+		board[r][c] = board[r-rr][c-cr];
 	}
-
+	
 	public boolean isEndCapped(int rr, int cr, int r, int c){		//rr=row relative; cr= column relative
 		if(!isInBoard(r,c)){
 			return false;
@@ -91,43 +78,43 @@ public class Board {
 		else if(board[r][c]==SquareStatus.EMPTY){
 			return false;
 		}
-
+		
 		return true;
 	}
-
+	
 	public boolean isLegalMove(Move move){
-
+		
 		if( !(isInBoard(move.getRow(), move.getCol())) ){
 			return false;
 		}
-
+		
 		if(board[move.getRow()][move.getCol()] != SquareStatus.EMPTY){
 			return false;
 		}
-
+		
 		findCriticalPieces(move);
-
+		
 		if (criticalPieces.size() == 0){
 			return false;
 		}
-
+		
 		return true;
 	}
-
+	
 	public int getNumTiles(SquareStatus s){
 		int sum = 0;
-
-		for(int r = 0; r < BOARD_SIZE; r++){
-			for(int c = 0; c < BOARD_SIZE; c++){
+		
+		for(int r=0;r<BOARD_SIZE;r++){
+			for(int c=0;c<BOARD_SIZE;c++){
 				if(this.board[r][c] == s){
 					sum++;
 				}
 			}
 		}
-
+		
 		return sum;
 	}
-
+	
 	public boolean isInBoard(int r, int c) {
 		//Check if a position is valid in the board
 		if(c < 0 || r < 0 || c >= BOARD_SIZE || r >= BOARD_SIZE){
@@ -135,30 +122,5 @@ public class Board {
 		}
 		return true;
 	}
-
-	public String toString(){
-		
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("# 0 1 2 3 4 5 6 7\n");
-		for(int r = 0; r < BOARD_SIZE; r++){
-			sb.append(r + " ");
-			for(int c = 0; c < BOARD_SIZE; c++){
-
-				if (board[r][c] == SquareStatus.BLACK){
-					sb.append("X ");
-				}
-				else if (board[r][c] == SquareStatus.WHITE){
-					sb.append("O ");
-				}
-				else{
-					sb.append("- ");
-				}
-			}
-			sb.append("\n");
-		}
-		sb.append("\n");
-
-		return sb.toString();		
-	}
+	
 }
