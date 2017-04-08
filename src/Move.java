@@ -6,14 +6,14 @@
 public class Move {
 	private int row;
 	private int col;
-	private SquareStatus piece;
+	private SquareStatus sqStat;
 
 
 	
 	public Move(int r,int c, SquareStatus piece){
 	this.row=r;
 	this.col=c;
-	this.piece=piece;
+	this.sqStat=piece;
 
 	}
 	
@@ -26,7 +26,7 @@ public class Move {
 	}
 	
 	public SquareStatus getColor(){
-		return piece;
+		return sqStat;
 	}
 
 }
