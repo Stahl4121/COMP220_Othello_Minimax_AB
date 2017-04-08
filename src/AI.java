@@ -37,7 +37,7 @@ public class AI {
 		Board copy = new Board(iter);
 		Map<Move, Integer> currentMax = new HashMap<Move, Integer>();
 		if(n==0){
-			currentMax.put(m, 0);
+			currentMax.put(m, -9999999);
 		}
 		Move currentMaxMove;
 		if(m.getColor()==SquareStatus.EMPTY){
@@ -48,7 +48,7 @@ public class AI {
 		}
 		for(int r=0;r<copy.BOARD_SIZE;r++){
 			for(int c=0;c<copy.BOARD_SIZE;c++){
-				if (copy.board[r][c]==SquareStatus.EMPTY){
+				if (copy.getBoard(r,c)==SquareStatus.EMPTY){
 					Move move = new Move(r,c,SquareStatus.WHITE);
 					if(copy.isLegalMove(move)){
 						try{
@@ -89,9 +89,10 @@ public class AI {
 		}
 		Board copy = new Board(iter);
 		Map<Move, Integer> currentMin = new HashMap<Move, Integer>();
+		Move currentMinMove=new Move(m);
 		for(int r=0;r<copy.BOARD_SIZE;r++){
 			for(int c=0;c<copy.BOARD_SIZE;c++){
-				if (copy.board[r][c]==SquareStatus.EMPTY){
+				if (copy.getBoard(r,c)==SquareStatus.EMPTY){
 					Move move = new Move(r,c,SquareStatus.WHITE);
 					if(copy.isLegalMove(move)){
 						try{
@@ -102,14 +103,15 @@ public class AI {
 							break;
 						}
 						if(currentMin.isEmpty()){
-							//currentMaxMove = new Move(move);
-							currentMin.putAll(min(copy, n, m)); 
+							Map<Move, Integer> tempMax = new HashMap<Move, Integer>();
+							tempMax.putAll(min(copy, n+1, move)); 
+							currentMin.replace(currentMinMove, tempMax.get(move));
 						}
 						else{
 							Map<Move, Integer> tempMax = new HashMap<Move, Integer>();
-							tempMax.putAll(min(copy, n, m));
-							if(currentMin.get(m)>tempMax.get(m)){
-								currentMin.replace(m, tempMax.get(m));
+							tempMax.putAll(min(copy, n+1, m));
+							if(currentMin.get(currentMinMove)>tempMax.get(m)){
+								currentMin.replace(currentMinMove, tempMax.get(move));
 							}
 						}
 					}

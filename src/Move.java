@@ -24,7 +24,7 @@ public class Move {
 		
 	}
 	
-	public Move(){
+	public Move(){		//is is purely for if there are no possible moves
 		row=-1;
 		col=-1;
 		sqStat=SquareStatus.EMPTY;
