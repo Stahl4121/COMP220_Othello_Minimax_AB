@@ -3,7 +3,11 @@ import java.util.Map;
 
 public class AI {
 
-	int depth=8;
+	private int depth;
+	
+	public AI(int depth){
+		this.depth=depth;
+	}
 	
 	public int getDepth(){
 		return depth;
