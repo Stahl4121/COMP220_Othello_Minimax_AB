@@ -5,7 +5,7 @@ public class OthelloMain {
 		Board othelloBoard = new Board();
 		Scanner scnr = new Scanner(System.in);
 
-		while (othelloBoard.getNumTiles(SquareStatus.EMPTY)!=0){
+		while (othelloBoard.isBoardFull()){
 			System.out.print(othelloBoard.toString());
 
 			System.out.print("Player 1 (" + SquareStatus.BLACK + "): ");
