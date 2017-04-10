@@ -5,7 +5,10 @@ public class Board {
 	final int BOARD_SIZE = 8;
 	public ArrayList<int[]> criticalPieces;
 
-
+	public SquareStatus getBoard(int r, int c){
+		return board[r][c];
+	}	
+	
 	public Board(){	
 		board = new SquareStatus[BOARD_SIZE][BOARD_SIZE];
 

@@ -11,10 +11,23 @@ public class Move {
 
 	
 	public Move(int r,int c, SquareStatus piece){
-	this.row=r;
-	this.col=c;
-	this.sqStat=piece;
+	row=r;
+	col=c;
+	sqStat=piece;
 
+	}
+	
+	public Move(Move m){
+		this.row=m.row;
+		this.col=m.col;
+		this.sqStat=m.sqStat;
+		
+	}
+	
+	public Move(){		//is is purely for if there are no possible moves
+		row=-1;
+		col=-1;
+		sqStat=SquareStatus.EMPTY;
 	}
 	
 	public int getRow(){
