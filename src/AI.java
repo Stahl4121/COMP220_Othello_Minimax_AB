@@ -48,7 +48,7 @@ public class AI {
 		}
 		for(int r=0;r<copy.BOARD_SIZE;r++){
 			for(int c=0;c<copy.BOARD_SIZE;c++){
-				if (copy.getBoard(r,c)==SquareStatus.EMPTY){
+				if (copy.getSquareStatus(r,c)==SquareStatus.EMPTY){
 					Move move = new Move(r,c,SquareStatus.WHITE);
 					if(copy.isLegalMove(move)){
 						try{
@@ -92,7 +92,7 @@ public class AI {
 		Move currentMinMove=new Move(m);
 		for(int r=0;r<copy.BOARD_SIZE;r++){
 			for(int c=0;c<copy.BOARD_SIZE;c++){
-				if (copy.getBoard(r,c)==SquareStatus.EMPTY){
+				if (copy.getSquareStatus(r,c)==SquareStatus.EMPTY){
 					Move move = new Move(r,c,SquareStatus.BLACK);
 					if(copy.isLegalMove(move)){
 						try{

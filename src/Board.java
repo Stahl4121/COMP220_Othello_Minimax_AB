@@ -5,10 +5,6 @@ public class Board {
 	final int BOARD_SIZE = 8;
 	public ArrayList<int[]> criticalPieces;
 
-	public SquareStatus getBoard(int r, int c){
-		return board[r][c];
-	}	
-	
 	public Board(){	
 		board = new SquareStatus[BOARD_SIZE][BOARD_SIZE];
 
@@ -37,6 +33,11 @@ public class Board {
 		criticalPieces = new ArrayList<int[]>();
 	}
 
+
+	public SquareStatus getSquareStatus(int r, int c){
+		return board[r][c];
+	}	
+	
 	public void makeMove(Move move) throws Exception{
 		if(! (isLegalMove(move))){
 			throw new Exception ("Invalid move.");
@@ -136,6 +137,18 @@ public class Board {
 		if(c < 0 || r < 0 || c >= BOARD_SIZE || r >= BOARD_SIZE){
 			return false;
 		}
+		return true;
+	}
+	
+	public boolean isBoardFull(){
+		for(int r = 0; r < BOARD_SIZE; r++){
+			for(int c = 0; c < BOARD_SIZE; c++){
+				if(this.board[r][c] == SquareStatus.EMPTY){
+					return false;
+				}
+			}
+		}
+		
 		return true;
 	}
 
