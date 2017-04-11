@@ -1,8 +1,10 @@
 import java.util.HashMap;
 import java.util.Map;
 /**
- * This Class creates an ai opponent for a human to play against. The AI goes second
- * @author MUMAWBM1
+ * This Class creates an AI opponent for a human to play against. 
+ * The AI goes second and calculates its best move using a minimax
+ * algoritm to a specified depth.
+ * @author MUMAWBM1 & STAHLLR1
  *
  */
 public class AI {
@@ -11,7 +13,7 @@ public class AI {
 	/**
 	 * Default constructor for an AI object.
 	 * 
-	 * It sets depth to 8.
+	 * It sets depth to a default value of 8.
 	 */
 	public AI(){
 		depth=8;
@@ -19,7 +21,8 @@ public class AI {
 	
 	
 	/**
-	 * This is a constructor for an AI object
+	 * This is a constructor for an AI object, setting
+	 * the depth of AI.
 	 * @param depth	this tells the ai how many moves into the future it should look.
 	 */
 	public AI(int depth){
@@ -27,7 +30,7 @@ public class AI {
 	}
 	
 	/**
-	 * 
+	 * Getter for depth member variable
 	 * @return Returns how many moves into the future the ai is calculating.
 	 */
 	public int getDepth(){
@@ -35,8 +38,8 @@ public class AI {
 	}
 	
 	/**
-	 * 
-	 * @param Allows user to set how many moves into the future the AI calculates
+	 * Setter for depth member variable
+	 * @param d How many moves into the future the AI calculates
 	 */
 	public void setDepth(int d){
 		depth=d;
@@ -65,7 +68,7 @@ public class AI {
 
 	/**
 	 * 
-	 * @param iterated	BBoard Object passed from max. It is a projected move possibility
+	 * @param iterated	Board Object passed from max. It is a projected move possibility
 	 * @param n		Iteration counter for recursion
 	 * @param m		Move Object that allows the min/max chain to keep track of move to pass up chain
 	 * @return		Returns a Map that uses a Move object as the key and an 
