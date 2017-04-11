@@ -1,8 +1,10 @@
 import java.util.HashMap;
 import java.util.Map;
 /**
- * This Class creates an ai opponent for a human to play against. The AI goes second
- * @author MUMAWBM1
+ * This Class creates an ai opponent for a human to play against. 
+ * The AI goes second and plays according to a minimax algorithm
+ * set to a specific depth.
+ * @author MUMAWBM1 & STAHLLR1
  *
  */
 public class AI {
@@ -10,8 +12,7 @@ public class AI {
 	private int depth;
 	/**
 	 * Default constructor for an AI object.
-	 * 
-	 * It sets depth to 8.
+	 * It sets the depth to a default value of 8.
 	 */
 	public AI(){
 		depth=8;
@@ -20,23 +21,24 @@ public class AI {
 	
 	/**
 	 * This is a constructor for an AI object
-	 * @param depth	this tells the ai how many moves into the future it should look.
+	 * that sets a specific depth.
+	 * @param depth	How many moves into the future the AI should look.
 	 */
 	public AI(int depth){
 		this.depth=depth;
 	}
 	
 	/**
-	 * 
-	 * @return Returns how many moves into the future the ai is calculating.
+	 * A getter for depth.
+	 * @return depth, how many moves into the future the ai is calculating.
 	 */
 	public int getDepth(){
 		return depth;
 	}
 	
 	/**
-	 * 
-	 * @param Allows user to set how many moves into the future the AI calculates
+	 * A setter for depth.
+	 * @param d, How many moves into the future the AI calculates
 	 */
 	public void setDepth(int d){
 		depth=d;
