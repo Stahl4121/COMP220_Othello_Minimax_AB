@@ -1,10 +1,29 @@
 import java.util.ArrayList;
 
+/**
+ * This class contains the large majority
+ * of the Othello program. It provides the code
+ * for the creation and modification of the board 
+ * (using Othello rules), including score tracking 
+ * methods, move validation, and a toString() method 
+ * to print the board.
+ * 
+ * @authors STAHLLR1 & MUMAWBM1
+ *
+ */
 public class Board {
-	private SquareStatus[][] board;	
 	final int BOARD_SIZE = 8;
-	public ArrayList<int[]> criticalPieces;
+	
+	private SquareStatus[][] board;	
+	private ArrayList<int[]> criticalPieces;
 
+	/**
+	 * The default constructor for a Board object.
+	 * It creates the 2D board array, initializing every
+	 * square to empty except for the four middle squares
+	 * that begin filled in the game Othello. It also 
+	 * initializes the other member variables.
+	 */
 	public Board(){	
 		board = new SquareStatus[BOARD_SIZE][BOARD_SIZE];
 
@@ -23,7 +42,18 @@ public class Board {
 		criticalPieces = new ArrayList<int[]>();
 	}
 
+	/**
+	 * This copy constructor for Board copies all 
+	 * of the information from an existing board
+	 * into a new board. It creates a deep copy
+	 * of the member variables, iterating through
+	 * the board array and copying each square.
+	 * 
+	 * @param Board other, the Board to be copied.
+	 */
 	public Board(Board other){
+		board = new SquareStatus[BOARD_SIZE][BOARD_SIZE];
+		
 		for(int r = 0; r < BOARD_SIZE; r++){
 			for(int c = 0; c < BOARD_SIZE; c++){
 				this.board[r][c] = other.board[r][c];
@@ -34,10 +64,25 @@ public class Board {
 	}
 
 
+	/**
+	 * This method returns the status of the 
+	 * specific square provided in the parameters.:
+	 * @param r, an int for the row position of the desired square
+	 * @param c, an int for the column position of the desired square
+	 * @return the enum SquareStatus: white, black, or empty.
+	 */
 	public SquareStatus getSquareStatus(int r, int c){
 		return board[r][c];
 	}	
 	
+	/**
+	 * This method calls isLegalMove() and throws an exception if illegal. 
+	 * If legal, the method continues to place the piece, and then call
+	 * the necessary method to flip the affected tiles.
+	 * 
+	 * @param move, a Move object containing the AI or Human's move.
+	 * @throws Exception, an error that the move is illegal
+	 */
 	public void makeMove(Move move) throws Exception{
 		if(! (isLegalMove(move))){
 			throw new Exception ("Invalid move.");
@@ -51,6 +96,14 @@ public class Board {
 	}
 
 
+	/**
+	 * THis method finds the locations of"critical pieces"
+	 * and adds them to the corresponding ArrayList. Critical 
+	 * pieces are pieces which begin the flipping process from
+	 * a new piece. There are 8 possible positions of a critical
+	 * point around a given position.
+	 * @param move
+	 */
 	public void findCriticalPieces(Move move){
 
 		//ArrayList<int[]> criticalPieces = new ArrayList<int[]>();
@@ -75,6 +128,14 @@ public class Board {
 		}
 	}
 
+	/**
+	 * This method uses recursion to flip all of the 
+	 * pieces affected by a new move. 
+	 * @param rr The row relative, vector path in direction that's being flipped
+	 * @param cr The column relative, vector path in direction that's being flipped
+	 * @param r  The row position of the critical piece.
+	 * @param c	 The column position of the critical piece.
+	 */
 	public void flipPieces(int rr, int cr, int r, int c){
 		if(board[r][c] == board[r+rr][c+cr] ){
 			board[r][c] = board[r-rr][c-cr];
@@ -85,6 +146,17 @@ public class Board {
 		}		
 	}
 
+	/**
+	 * This checks if there is a valid path from the new piece to another
+	 * piece of the same color, using recursion. It fulfills the primary condition
+	 * for being a critical piece.
+	 * 
+	 * @param rr The row relative, vector path in direction that's being checked
+	 * @param cr The column relative, vector path in direction that's being checked
+	 * @param r  The row position of the critical piece.
+	 * @param c	 The column position of the critical piece.
+	 * @return a boolean of whether the path is capped by another piece of the same color
+	 */
 	public boolean isEndCapped(int rr, int cr, int r, int c){		//rr=row relative; cr= column relative
 		if(!isInBoard(r,c)){
 			return false;
@@ -99,6 +171,15 @@ public class Board {
 		return true;
 	}
 
+	/**
+	 * Checks if the attempted move is valid. Checks
+	 * that the move is within the board, filling an
+	 * empty space, and will lead to flipped tiles, i.e.,
+	 * has critical pieces.
+	 * 
+	 * @param move The move being attempted.
+	 * @return A boolean of whether the move is valid.
+	 */
 	public boolean isLegalMove(Move move){
 
 		if( !(isInBoard(move.getRow(), move.getCol())) ){
@@ -118,6 +199,12 @@ public class Board {
 		return true;
 	}
 
+	/**
+	 * Counts the number of a certain
+	 * type of tile in the board.
+	 * @param s The SquareStatus being counted: white/black/empty.
+	 * @return An integer sum of the number of certain tiles.
+	 */
 	public int getNumTiles(SquareStatus s){
 		int sum = 0;
 
@@ -132,6 +219,13 @@ public class Board {
 		return sum;
 	}
 
+	/**
+	 * Checks whether the position is within the board.
+	 * 
+	 * @param r The row position in the board.
+	 * @param c The column position in the board.
+	 * @return A boolean whether the position is within the board.
+	 */
 	public boolean isInBoard(int r, int c) {
 		//Check if a position is valid in the board
 		if(c < 0 || r < 0 || c >= BOARD_SIZE || r >= BOARD_SIZE){
@@ -140,6 +234,11 @@ public class Board {
 		return true;
 	}
 	
+	/**
+	 * Checks whether the board is full
+	 * 
+	 * @return A boolean of whether the board is full
+	 */
 	public boolean isBoardFull(){
 		for(int r = 0; r < BOARD_SIZE; r++){
 			for(int c = 0; c < BOARD_SIZE; c++){
@@ -152,6 +251,13 @@ public class Board {
 		return true;
 	}
 
+	/**
+	 * Builds and returns a string containing
+	 * the formatted Othello board with grid coordinates
+	 * labeled on the side.
+	 * 
+	 * @return A String containing the board and its formatting.
+	 */
 	public String toString(){
 		
 		StringBuilder sb = new StringBuilder();
