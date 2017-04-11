@@ -43,7 +43,7 @@ public class AI {
 	}
 	
 	/**
-	 * 
+	 * Starts the minimax process, and then returns the final selected move to main
 	 * @param current Takes in the current state of the board to figure out how many
 	 * @return Returns the most optimal move to be played by the AI
 	 */
@@ -64,8 +64,9 @@ public class AI {
 	}
 
 	/**
-	 * 
-	 * @param iterated	BBoard Object passed from max. It is a projected move possibility
+	 * This method is the max portion of minimax, and as such finds the best possible
+	 * move the ai can make
+	 * @param iterated	Board Object passed from max. It is a projected move possibility
 	 * @param n		Iteration counter for recursion
 	 * @param m		Move Object that allows the min/max chain to keep track of move to pass up chain
 	 * @return		Returns a Map that uses a Move object as the key and an 
@@ -127,7 +128,8 @@ public class AI {
 
 	
 	/**
-	 * 
+	 * This method is the min portion of minimax, and as such finds the worst possible
+	 * move(for the ai) that the human can make
 	 * @param iterated 	Board Object passed from max. It is a projected move possibility
 	 * @param n			Keeps track of recursion layer
 	 * @param m			Move Object that allows the min/max chain to keep track of move to pass up chain
