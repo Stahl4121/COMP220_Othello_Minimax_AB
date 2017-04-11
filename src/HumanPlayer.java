@@ -4,6 +4,10 @@
  *
  */
 public class HumanPlayer {
+	//Doubt these member variables will stay here, but want dependency in the UML
+	private Move humanMove;
+	private Board board;
+	
 	/**
 	 * creates scanner to read in player's move
 	 */
