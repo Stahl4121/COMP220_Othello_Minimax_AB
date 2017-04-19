@@ -51,7 +51,18 @@ public class AI {
 	 */
 	public Move aiMove(Board current){
 		Move m= new Move();
-		HashMap<Move, Integer> move = new HashMap<Move, Integer>();
+		int best = -999999;
+		for(int r=0 ; r < current.BOARD_SIZE ; r++){
+			for(int c = 0; c < current.BOARD_SIZE; c++){
+				Move t = new Move(r,c,SquareStatus.WHITE);
+				int temp = max(current,0,t);
+				if(best<temp){
+					best=temp;
+					m=t;
+				}
+			}
+		}
+		/*HashMap<Move, Integer> move = new HashMap<Move, Integer>();
 		move.putAll(max(current,0,m));		
 		for(int r=0; r<current.BOARD_SIZE; r++){
 			for(int c=0; c<current.BOARD_SIZE;c++){
@@ -60,7 +71,7 @@ public class AI {
 					m=new Move(query);
 				}
 			}
-		}
+		}*/
 		return m;
 		
 	}
@@ -75,8 +86,23 @@ public class AI {
 	 * 				Integer value as the value. This is how all pertinent information is relayed
 	 * 				back up to aiMove.
 	 */
-	public Map<Move, Integer> max(Board iterated, int n , Move m){
+	public /*Map<Move, Integer>*/int max(Board iterated, int n , Move m){
 		if(n==depth){
+			return iterated.getNumTiles(SquareStatus.WHITE);
+		}
+		Board copy = new Board(iterated);
+		int maxScore=0;
+		for(int r=0;r<copy.BOARD_SIZE;r++){
+			for(int c=0;c<copy.BOARD_SIZE;c++){
+				Move layer = new Move(r,c,SquareStatus.WHITE);
+				int temp =min(iterated, n+1, layer);
+				if(maxScore<temp){
+					maxScore=temp;
+				}
+			}
+		}
+		return maxScore;
+		/*if(n==depth){
 			HashMap<Move, Integer> score = new HashMap<Move,Integer>();
 			score.put(m, iterated.getNumTiles(SquareStatus.WHITE));
 			return score;
@@ -125,7 +151,7 @@ public class AI {
 				}
 			}
 		}
-		return currentMax;
+		return currentMax;*/
 	}
 
 	
@@ -139,8 +165,23 @@ public class AI {
 	 * 				Integer value as the value. This is how all pertinent information is relayed
 	 * 				back up to aiMove.
 	 */
-	public Map<Move, Integer> min(Board iterated, int n, Move m){
+	public int/*Map<Move, Integer>*/ min(Board iterated, int n, Move m){
 		if(n==depth){
+			return iterated.getNumTiles(SquareStatus.WHITE);
+		}
+		Board copy = new Board(iterated);
+		int minScore=0;
+		for(int r=0;r<copy.BOARD_SIZE;r++){
+			for(int c=0;c<copy.BOARD_SIZE;c++){
+				Move layer = new Move(r,c,SquareStatus.BLACK);
+				int temp =max(iterated, n+1, layer);
+				if(minScore>temp){
+					minScore=temp;
+				}
+			}
+		}
+		return minScore;
+		/*if(n==depth){
 			HashMap<Move, Integer> score = new HashMap<Move, Integer>();
 			score.put(m, iterated.getNumTiles(SquareStatus.WHITE));
 			return score;
@@ -176,6 +217,6 @@ public class AI {
 				}
 			}
 		}
-		return currentMin;
+		return currentMin;*/
 	}
 }
