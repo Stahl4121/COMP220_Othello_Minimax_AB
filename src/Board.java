@@ -13,9 +13,9 @@ import java.util.ArrayList;
  */
 public class Board {
 	final int BOARD_SIZE = 8;
-	
+
 	private SquareStatus[][] board;	
-	private ArrayList<int[]> criticalPieces;
+	//private ArrayList<int[]> criticalPieces;
 
 	/**
 	 * The default constructor for a Board object.
@@ -32,14 +32,14 @@ public class Board {
 				this.board[r][c] = SquareStatus.EMPTY;
 			}
 		}
-		
+
 		this.board[3][3] = SquareStatus.WHITE;
 		this.board[4][4] = SquareStatus.WHITE;
 		this.board[3][4] = SquareStatus.BLACK;
 		this.board[4][3] = SquareStatus.BLACK;
-		
 
-		criticalPieces = new ArrayList<int[]>();
+
+		//criticalPieces = new ArrayList<int[]>();
 	}
 
 	/**
@@ -53,14 +53,14 @@ public class Board {
 	 */
 	public Board(Board other){
 		board = new SquareStatus[BOARD_SIZE][BOARD_SIZE];
-		
+
 		for(int r = 0; r < BOARD_SIZE; r++){
 			for(int c = 0; c < BOARD_SIZE; c++){
 				this.board[r][c] = other.board[r][c];
 			}
 		}
 
-		criticalPieces = new ArrayList<int[]>();
+		//criticalPieces = new ArrayList<int[]>();
 	}
 
 
@@ -74,7 +74,7 @@ public class Board {
 	public SquareStatus getSquareStatus(int r, int c){
 		return board[r][c];
 	}	
-	
+
 	/**
 	 * This method calls isLegalMove() and throws an exception if illegal. 
 	 * If legal, the method continues to place the piece, and then call
@@ -87,10 +87,12 @@ public class Board {
 		if(! (isLegalMove(move))){
 			throw new Exception ("Invalid move.");
 		}
-
+		
+		ArrayList<int[]> critPieces = findCriticalPieces(move);
+		
 		board[move.getRow()][move.getCol()] = move.getColor();	
 
-		for(int[] coords : criticalPieces){
+		for(int[] coords : critPieces){
 			flipPieces(coords[0]-move.getRow(), coords[1]-move.getCol(), coords[0], coords[1]);
 		}
 	}
@@ -104,71 +106,76 @@ public class Board {
 	 * point around a given position.
 	 * @param move
 	 */
-	public void findCriticalPieces(Move move){
+	private ArrayList<int[]> findCriticalPieces(Move move){
 
-		//ArrayList<int[]> criticalPieces = new ArrayList<int[]>();
-		criticalPieces = new ArrayList<int[]>();
+		ArrayList<int[]> criticalPieces = new ArrayList<int[]>();
 
 		for(int r = move.getRow()-1; r <= (move.getRow() + 1); r++){
 			for(int c = move.getCol()-1; c <= (move.getCol() + 1); c++){
 
-				if(r == move.getRow() && c == move.getCol() ){
-					c++;
-				}
-
+				//Could combine both if statements, but this is better for readability
 				if(isInBoard(r,c) && board[r][c]!=SquareStatus.EMPTY && board[r][c] != move.getColor()){
-					boolean isCritPiece = isEndCapped(r-move.getRow(), c-move.getCol(), r, c);
-					if (isCritPiece){
+					if (isEndCapped(r-move.getRow(), c-move.getCol(), r, c)){
 						criticalPieces.add(new int[]{r, c});
-						//board[move.getRow()][move.getCol()] = move.getColor();
-						//flipPieces(r-move.getRow(), c-move.getCol(), r, c);
 					}
 				}
 			}
 		}
+
+		return criticalPieces;
+
 	}
 
 	/**
-	 * This method uses recursion to flip all of the 
+	 * This method flips all of the 
 	 * pieces affected by a new move. 
+	 * 
 	 * @param rr The row relative, vector path in direction that's being flipped
 	 * @param cr The column relative, vector path in direction that's being flipped
-	 * @param r  The row position of the critical piece.
-	 * @param c	 The column position of the critical piece.
+	 * @param row  The row position of the critical piece.
+	 * @param column	 The column position of the critical piece.
 	 */
-	public void flipPieces(int rr, int cr, int r, int c){
-		if(board[r][c] == board[r+rr][c+cr] ){
-			board[r][c] = board[r-rr][c-cr];
-			flipPieces(rr, cr, r+rr, c+cr);
+	public void flipPieces(int rr, int cr, int row, int column){
+
+		for(int r = row; r < BOARD_SIZE; r += rr){
+			for(int c = column; c < BOARD_SIZE; c+=cr){
+
+				if(board[r][c] != board[r+rr][c+cr] ){
+					board[r][c] = board[r-rr][c-cr];
+					return;
+				}
+
+				board[r][c] = board[r-rr][c-cr];
+			}
 		}
-		else{
-			board[r][c] = board[r-rr][c-cr];
-		}		
+
 	}
 
 	/**
 	 * This checks if there is a valid path from the new piece to another
-	 * piece of the same color, using recursion. It fulfills the primary condition
+	 * piece of the same color. It fulfills the primary condition
 	 * for being a critical piece.
 	 * 
 	 * @param rr The row relative, vector path in direction that's being checked
 	 * @param cr The column relative, vector path in direction that's being checked
-	 * @param r  The row position of the critical piece.
-	 * @param c	 The column position of the critical piece.
+	 * @param row  The row position of the critical piece.
+	 * @param column The column position of the critical piece.
 	 * @return a boolean of whether the path is capped by another piece of the same color
 	 */
-	public boolean isEndCapped(int rr, int cr, int r, int c){		//rr=row relative; cr= column relative
-		if(!isInBoard(r,c)){
-			return false;
-		}
-		else if(board[r][c]==board[r+rr][c+cr]){
-			return(isEndCapped(rr,cr,r+rr,c+cr));
-		}
-		else if(board[r][c]==SquareStatus.EMPTY){
-			return false;
+	private boolean isEndCapped(int rr, int cr, int row, int column){		//rr=row relative; cr= column relative
+
+		for(int r = row; isInBoard(r,column); r += rr){
+			for(int c = column; isInBoard(row, c); c+=cr){
+				if(board[r][c] == SquareStatus.EMPTY){
+					return false;
+				}
+				else if(board[r][c] != board[row][column]){
+					return true;
+				}
+			}
 		}
 
-		return true;
+		return false;
 	}
 
 	/**
@@ -182,6 +189,18 @@ public class Board {
 	 */
 	public boolean isLegalMove(Move move){
 
+		if( ! isAvalableMove(move) ){
+			return false;
+		}
+		if (findCriticalPieces(move).size() == 0){
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean isAvalableMove(Move move){
+
 		if( !(isInBoard(move.getRow(), move.getCol())) ){
 			return false;
 		}
@@ -190,15 +209,8 @@ public class Board {
 			return false;
 		}
 
-		findCriticalPieces(move);
-
-		if (criticalPieces.size() == 0){
-			return false;
-		}
-
 		return true;
 	}
-
 	/**
 	 * Counts the number of a certain
 	 * type of tile in the board.
@@ -226,14 +238,14 @@ public class Board {
 	 * @param c The column position in the board.
 	 * @return A boolean whether the position is within the board.
 	 */
-	public boolean isInBoard(int r, int c) {
+	private boolean isInBoard(int r, int c) {
 		//Check if a position is valid in the board
 		if(c < 0 || r < 0 || c >= BOARD_SIZE || r >= BOARD_SIZE){
 			return false;
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Checks whether the board is full
 	 * 
@@ -247,7 +259,7 @@ public class Board {
 				}
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -259,7 +271,7 @@ public class Board {
 	 * @return A String containing the board and its formatting.
 	 */
 	public String toString(){
-		
+
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("# 0 1 2 3 4 5 6 7\n");
