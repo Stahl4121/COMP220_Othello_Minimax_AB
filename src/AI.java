@@ -95,9 +95,18 @@ public class AI {
 		for(int r=0;r<copy.BOARD_SIZE;r++){
 			for(int c=0;c<copy.BOARD_SIZE;c++){
 				Move layer = new Move(r,c,SquareStatus.WHITE);
-				int temp =min(iterated, n+1, layer);
-				if(maxScore<temp){
-					maxScore=temp;
+				if (copy.isLegalMove(layer)){
+					try{
+						copy.makeMove(layer);
+					}
+					catch(Exception e){
+						e.getMessage();
+						break;
+					}
+					int temp =min(iterated, n+1, layer);
+					if(maxScore<temp){
+						maxScore=temp;
+					}
 				}
 			}
 		}
@@ -174,9 +183,18 @@ public class AI {
 		for(int r=0;r<copy.BOARD_SIZE;r++){
 			for(int c=0;c<copy.BOARD_SIZE;c++){
 				Move layer = new Move(r,c,SquareStatus.BLACK);
-				int temp =max(iterated, n+1, layer);
-				if(minScore>temp){
-					minScore=temp;
+				if (copy.isLegalMove(layer)){
+					try{
+						copy.makeMove(layer);
+					}
+					catch(Exception e){
+						e.getMessage();
+						break;
+					}
+					int temp =max(copy, n+1, layer);
+					if(minScore>temp){
+						minScore=temp;
+					}
 				}
 			}
 		}
