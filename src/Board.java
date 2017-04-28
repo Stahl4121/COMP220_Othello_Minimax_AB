@@ -137,16 +137,20 @@ public class Board {
 	 */
 	public void flipPieces(int rr, int cr, int row, int column){
 
-		for(int r = row; r < BOARD_SIZE; r += rr){
-			for(int c = column; c < BOARD_SIZE; c+=cr){
+		int r = row;
+		int c = column;
 
-				if(board[r][c] != board[r+rr][c+cr] ){
-					board[r][c] = board[r-rr][c-cr];
-					return;
-				}
+		while (true){
 
+			if(board[r][c] != board[r+rr][c+cr] ){
 				board[r][c] = board[r-rr][c-cr];
+				return;
 			}
+
+			board[r][c] = board[r-rr][c-cr];
+
+			r += rr;
+			c += cr;
 		}
 
 	}
@@ -167,27 +171,28 @@ public class Board {
 		int r = row;
 		int c = column;
 
-		for(; isInBoard(r,c); r += rr){
-				if(board[r][c] == SquareStatus.EMPTY){
-					return false;
-				}
-				else if(board[r][c] != board[row][column]){
-					return true;
-				}
-			
+		while(isInBoard(r,c)){
+			if(board[r][c] == SquareStatus.EMPTY){
+				return false;
+			}
+			else if(board[r][c] != board[row][column]){
+				return true;
+			}
+
+			r += rr;
 			c += cr;
 		}
-		
-//		for(int r = row; isInBoard(r,column); r += rr){
-//			for(int c = column; isInBoard(row, c); c+=cr){
-//				if(board[r][c] == SquareStatus.EMPTY){
-//					return false;
-//				}
-//				else if(board[r][c] != board[row][column]){
-//					return true;
-//				}
-//			}
-//		}
+
+		//		for(int r = row; isInBoard(r,column); r += rr){
+		//			for(int c = column; isInBoard(row, c); c+=cr){
+		//				if(board[r][c] == SquareStatus.EMPTY){
+		//					return false;
+		//				}
+		//				else if(board[r][c] != board[row][column]){
+		//					return true;
+		//				}
+		//			}
+		//		}
 
 		return false;
 	}
