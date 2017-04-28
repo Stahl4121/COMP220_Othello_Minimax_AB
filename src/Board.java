@@ -87,9 +87,9 @@ public class Board {
 		if(! (isLegalMove(move))){
 			throw new Exception ("Invalid move.");
 		}
-		
+
 		ArrayList<int[]> critPieces = findCriticalPieces(move);
-		
+
 		board[move.getRow()][move.getCol()] = move.getColor();	
 
 		for(int[] coords : critPieces){
@@ -164,16 +164,30 @@ public class Board {
 	 */
 	private boolean isEndCapped(int rr, int cr, int row, int column){		//rr=row relative; cr= column relative
 
-		for(int r = row; isInBoard(r,column); r += rr){
-			for(int c = column; isInBoard(row, c); c+=cr){
+		int r = row;
+		int c = column;
+
+		for(; isInBoard(r,c); r += rr){
 				if(board[r][c] == SquareStatus.EMPTY){
 					return false;
 				}
 				else if(board[r][c] != board[row][column]){
 					return true;
 				}
-			}
+			
+			c += cr;
 		}
+		
+//		for(int r = row; isInBoard(r,column); r += rr){
+//			for(int c = column; isInBoard(row, c); c+=cr){
+//				if(board[r][c] == SquareStatus.EMPTY){
+//					return false;
+//				}
+//				else if(board[r][c] != board[row][column]){
+//					return true;
+//				}
+//			}
+//		}
 
 		return false;
 	}

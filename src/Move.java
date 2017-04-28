@@ -16,12 +16,12 @@ public class Move {
 	 * @param piece Colour of piece being placed
 	 */
 	public Move(int r,int c, SquareStatus piece){
-	row=r;
-	col=c;
-	sqStat=piece;
+		row=r;
+		col=c;
+		sqStat=piece;
 
 	}
-	
+
 	/**
 	 * Copy constructor for Move
 	 * @param m Takes a move object and makes a deep copy
@@ -30,7 +30,7 @@ public class Move {
 		this.row=m.row;
 		this.col=m.col;
 		this.sqStat=m.sqStat;
-		
+
 	}
 	/**
 	 * Default constructor for Move. Creates a move with an impossible move that cannot

@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 /**
@@ -7,15 +8,18 @@ import java.util.Map;
  * @author MUMAWBM1 & STAHLLR1
  *
  */
-public class AI {
-
+public class AIPlayer extends Player {
+	//Proper Practice here?
+	private final int DEFAULT_DEPTH = 8;
 	private int depth;
+	
 	/**
 	 * Default constructor for an AI object.
 	 * It sets the depth to a default value of 8.
 	 */
-	public AI(){
-		depth=8;
+	public AIPlayer(){
+		color = SquareStatus.WHITE;
+		depth = DEFAULT_DEPTH;
 	}
 	
 	
@@ -24,8 +28,30 @@ public class AI {
 	 * that sets a specific depth.
 	 * @param depth	How many moves into the future the AI should look.
 	 */
-	public AI(int depth){
-		this.depth=depth;
+	public AIPlayer(int depth){
+		color = SquareStatus.WHITE;
+		this.depth = depth;
+	}
+	
+	/**
+	 * This is a constructor for an AI object
+	 * that sets a specific color.
+	 * @param color The color of the AIPlayer
+	 */
+	public AIPlayer(SquareStatus color){
+		this.color = color;
+		depth = DEFAULT_DEPTH;
+	}
+	
+	/**
+	 * This is a constructor for an AI object
+	 * that sets a specific depth and color.
+	 * @param depth	How many moves into the future the AI should look.
+	 * @param color 
+	 */
+	public AIPlayer(int depth, SquareStatus color){
+		this.color = color;
+		this.depth = depth;
 	}
 	
 	/**
@@ -54,7 +80,7 @@ public class AI {
 		int best = -999999;
 		for(int r=0 ; r < current.BOARD_SIZE ; r++){
 			for(int c = 0; c < current.BOARD_SIZE; c++){
-				Move t = new Move(r,c,SquareStatus.WHITE);
+				Move t = new Move(r,c,color);
 				int temp = max(current,0,t);
 				if(best<temp){
 					best=temp;
@@ -66,7 +92,7 @@ public class AI {
 		move.putAll(max(current,0,m));		
 		for(int r=0; r<current.BOARD_SIZE; r++){
 			for(int c=0; c<current.BOARD_SIZE;c++){
-				Move query = new Move(r, c, SquareStatus.WHITE);
+				Move query = new Move(r, c, color);
 				if(move.containsKey(query)){
 					m=new Move(query);
 				}
@@ -88,13 +114,13 @@ public class AI {
 	 */
 	public /*Map<Move, Integer>*/int max(Board iterated, int n , Move m){
 		if(n==depth){
-			return iterated.getNumTiles(SquareStatus.WHITE);
+			return iterated.getNumTiles(color);
 		}
 		Board copy = new Board(iterated);
 		int maxScore=0;
 		for(int r=0;r<copy.BOARD_SIZE;r++){
 			for(int c=0;c<copy.BOARD_SIZE;c++){
-				Move layer = new Move(r,c,SquareStatus.WHITE);
+				Move layer = new Move(r,c,color);
 				if (copy.isLegalMove(layer)){
 					try{
 						copy.makeMove(layer);
@@ -113,7 +139,7 @@ public class AI {
 		return maxScore;
 		/*if(n==depth){
 			HashMap<Move, Integer> score = new HashMap<Move,Integer>();
-			score.put(m, iterated.getNumTiles(SquareStatus.WHITE));
+			score.put(m, iterated.getNumTiles(color));
 			return score;
 		}
 		Board copy = new Board(iterated);
@@ -131,7 +157,7 @@ public class AI {
 		for(int r=0;r<copy.BOARD_SIZE;r++){
 			for(int c=0;c<copy.BOARD_SIZE;c++){
 				if (copy.getSquareStatus(r,c)==SquareStatus.EMPTY){
-					Move move = new Move(r,c,SquareStatus.WHITE);
+					Move move = new Move(r,c,color);
 					if(copy.isLegalMove(move)){
 						try{
 							copy.makeMove(move);
@@ -175,14 +201,24 @@ public class AI {
 	 * 				back up to aiMove.
 	 */
 	public int/*Map<Move, Integer>*/ min(Board iterated, int n, Move m){
+		
+		SquareStatus opposingColor;
+		
+		if(color == SquareStatus.BLACK){
+			opposingColor = SquareStatus.WHITE;
+		}
+		else{
+			opposingColor = SquareStatus.BLACK;
+		}
+		
 		if(n==depth){
-			return iterated.getNumTiles(SquareStatus.WHITE);
+			return iterated.getNumTiles(color);
 		}
 		Board copy = new Board(iterated);
 		int minScore=0;
 		for(int r=0;r<copy.BOARD_SIZE;r++){
 			for(int c=0;c<copy.BOARD_SIZE;c++){
-				Move layer = new Move(r,c,SquareStatus.BLACK);
+				Move layer = new Move(r,c,opposingColor);
 				if (copy.isLegalMove(layer)){
 					try{
 						copy.makeMove(layer);
@@ -201,7 +237,7 @@ public class AI {
 		return minScore;
 		/*if(n==depth){
 			HashMap<Move, Integer> score = new HashMap<Move, Integer>();
-			score.put(m, iterated.getNumTiles(SquareStatus.WHITE));
+			score.put(m, iterated.getNumTiles(color));
 			return score;
 		}
 		Board copy = new Board(iterated);
@@ -236,5 +272,12 @@ public class AI {
 			}
 		}
 		return currentMin;*/
+	}
+
+
+	@Override
+	public Move getMove(){
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
