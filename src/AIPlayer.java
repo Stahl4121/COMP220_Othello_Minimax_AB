@@ -75,7 +75,8 @@ public class AIPlayer extends Player {
 	 * @param current Takes in the current state of the board to figure out how many
 	 * @return Returns the most optimal move to be played by the AI
 	 */
-	public Move aiMove(Board current){
+	@Override
+	public Move getMove(Board current){
 		Move m= new Move();
 		int best = -999999;
 		for(int r=0 ; r < current.BOARD_SIZE ; r++){
@@ -274,10 +275,4 @@ public class AIPlayer extends Player {
 		return currentMin;*/
 	}
 
-
-	@Override
-	public Move getMove(){
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
