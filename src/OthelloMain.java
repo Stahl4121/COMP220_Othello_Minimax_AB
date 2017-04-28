@@ -77,11 +77,11 @@ public class OthelloMain {
 				try{
 
 					if(isPlayerOne){
-						othelloBoard.makeMove(player1.getMove());
+						othelloBoard.makeMove(player1.getMove(othelloBoard));
 						isPlayerOne = false;
 					}
 					else{
-						othelloBoard.makeMove(player2.getMove());
+						othelloBoard.makeMove(player2.getMove(othelloBoard));
 						isPlayerOne = true;
 					}
 

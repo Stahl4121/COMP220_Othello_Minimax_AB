@@ -20,7 +20,7 @@ public class HumanPlayer extends Player {
 	 * creates scanner to read in player's move
 	 */
 	@Override
-	public Move getMove(){
+	public Move getMove(Board current){
 		int row = 0;
 		int column = 0;
 
