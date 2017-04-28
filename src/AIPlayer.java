@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 /**
@@ -79,16 +80,16 @@ public class AIPlayer extends Player {
 	public Move getMove(Board current){
 		Move m= new Move();
 		int best = -999999;
+		ArrayList<Move> list = new ArrayList<Move>();
 		for(int r=0 ; r < current.BOARD_SIZE ; r++){
 			for(int c = 0; c < current.BOARD_SIZE; c++){
 				Move t = new Move(r,c,color);
-				int temp = max(current,0,t);
-				if(best<temp){
-					best=temp;
-					m=t;
+				if(current.isLegalMove(t)){
+					list.add(t);
 				}
 			}
 		}
+		return(list.get(max(current,depth,list)));
 		/*HashMap<Move, Integer> move = new HashMap<Move, Integer>();
 		move.putAll(max(current,0,m));		
 		for(int r=0; r<current.BOARD_SIZE; r++){
@@ -98,9 +99,7 @@ public class AIPlayer extends Player {
 					m=new Move(query);
 				}
 			}
-		}*/
-		return m;
-		
+		}*/		
 	}
 
 	/**
@@ -113,31 +112,52 @@ public class AIPlayer extends Player {
 	 * 				Integer value as the value. This is how all pertinent information is relayed
 	 * 				back up to aiMove.
 	 */
-	public /*Map<Move, Integer>*/int max(Board iterated, int n , Move m){
+	public /*Map<Move, Integer>*/int max(Board iterated, int n , ArrayList<Move> moves){
 		if(n==depth){
 			return iterated.getNumTiles(color);
 		}
+		
+		SquareStatus opposingColor;
+		if(color == SquareStatus.BLACK){
+			opposingColor = SquareStatus.WHITE;
+		}
+		else{
+			opposingColor = SquareStatus.BLACK;
+		}
+
 		Board copy = new Board(iterated);
 		int maxScore=0;
-		for(int r=0;r<copy.BOARD_SIZE;r++){
-			for(int c=0;c<copy.BOARD_SIZE;c++){
-				Move layer = new Move(r,c,color);
-				if (copy.isLegalMove(layer)){
-					try{
-						copy.makeMove(layer);
-					}
-					catch(Exception e){
-						e.getMessage();
-						break;
-					}
-					int temp =min(iterated, n+1, layer);
-					if(maxScore<temp){
-						maxScore=temp;
+		int aryLstNum = -1;
+		for(int i=0;i<moves.size();i++){
+			try{
+				copy.makeMove(moves.get(i));
+				ArrayList<Move> list = new ArrayList<>();
+				for(int r=0;r<copy.BOARD_SIZE;r++){
+					for(int c=0;c<copy.BOARD_SIZE;c++){
+						Move layer = new Move(r,c,opposingColor);
+						if (copy.isLegalMove(layer)){
+							list.add(layer);
+						}
 					}
 				}
+				int temp =min(copy, n+1, list);
+				if(maxScore<temp){
+					maxScore=temp;
+					if(n==0){
+						aryLstNum=i;
+					}
+				}
+				
+			}
+			catch(Exception e){
+				System.out.println("NO!!!!!!!!!");
 			}
 		}
+		if(n==0){
+			return aryLstNum;//element num of best move
+		}
 		return maxScore;
+		
 		/*if(n==depth){
 			HashMap<Move, Integer> score = new HashMap<Move,Integer>();
 			score.put(m, iterated.getNumTiles(color));
@@ -201,41 +221,51 @@ public class AIPlayer extends Player {
 	 * 				Integer value as the value. This is how all pertinent information is relayed
 	 * 				back up to aiMove.
 	 */
-	public int/*Map<Move, Integer>*/ min(Board iterated, int n, Move m){
+	public int/*Map<Move, Integer>*/ min(Board iterated, int n, ArrayList<Move> moves){
+		if(n==depth){
+			return iterated.getNumTiles(color);
+		}
 		
-		SquareStatus opposingColor;
-		
+		/*SquareStatus opposingColor;
 		if(color == SquareStatus.BLACK){
 			opposingColor = SquareStatus.WHITE;
 		}
 		else{
 			opposingColor = SquareStatus.BLACK;
-		}
-		
-		if(n==depth){
-			return iterated.getNumTiles(color);
-		}
+		}*/
+
 		Board copy = new Board(iterated);
-		int minScore=0;
-		for(int r=0;r<copy.BOARD_SIZE;r++){
-			for(int c=0;c<copy.BOARD_SIZE;c++){
-				Move layer = new Move(r,c,opposingColor);
-				if (copy.isLegalMove(layer)){
-					try{
-						copy.makeMove(layer);
-					}
-					catch(Exception e){
-						e.getMessage();
-						break;
-					}
-					int temp =max(copy, n+1, layer);
-					if(minScore>temp){
-						minScore=temp;
+		int maxScore=0;
+		int aryLstNum = -1;
+		for(int i=0;i<moves.size();i++){
+			try{
+				copy.makeMove(moves.get(i));
+				ArrayList<Move> list = new ArrayList<>();
+				for(int r=0;r<copy.BOARD_SIZE;r++){
+					for(int c=0;c<copy.BOARD_SIZE;c++){
+						Move layer = new Move(r,c,color);
+						if (copy.isLegalMove(layer)){
+							list.add(layer);
+						}
 					}
 				}
+				int temp =min(copy, n+1, list);
+				if(maxScore<temp){
+					maxScore=temp;
+					if(n==0){
+						aryLstNum=i;
+					}
+				}
+				
+			}
+			catch(Exception e){
+				System.out.println("NO!!!!!!!!!");
 			}
 		}
-		return minScore;
+		if(n==0){
+			return aryLstNum;//element num of best move
+		}
+		return maxScore;
 		/*if(n==depth){
 			HashMap<Move, Integer> score = new HashMap<Move, Integer>();
 			score.put(m, iterated.getNumTiles(color));
