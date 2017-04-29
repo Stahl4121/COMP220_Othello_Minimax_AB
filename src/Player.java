@@ -1,4 +1,3 @@
-import java.io.IOException;
 
 /**
  * A Player class for HumanPlayer and 
@@ -27,6 +26,12 @@ public abstract class Player {
 	 */
 	abstract public Move getMove(Board current);
 	
+	/**
+	 * A method overwritten in both child classes, allowing for odd edge cases
+	 * with the ai.
+	 * 
+	 * @return A boolean, whether or not it is an ai.
+	 */
 	abstract public boolean isAI();
 
 }

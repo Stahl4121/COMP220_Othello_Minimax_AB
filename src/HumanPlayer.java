@@ -1,5 +1,3 @@
-import java.io.IOException;
-import java.util.Scanner;
 
 /**
  * This is A stub for a human player class which may or may not be used.

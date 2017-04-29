@@ -44,7 +44,7 @@ public class OthelloMain {
 
 			if (choice == 1){
 				player1 = new HumanPlayer();
-				player2 = new AIPlayer(4);
+				player2 = new AIPlayer(2);
 				break;
 			}
 			else if (choice == 2){
