@@ -53,8 +53,8 @@ public class OthelloMain {
 				break;
 			}
 			else if (choice == 3){
-				player1 = new AIPlayer();
-				player2 = new AIPlayer(SquareStatus.BLACK);
+				player1 = new AIPlayer(SquareStatus.BLACK);
+				player2 = new AIPlayer();
 				break;
 			}
 			else{

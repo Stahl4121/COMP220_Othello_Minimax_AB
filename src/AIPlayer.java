@@ -2,6 +2,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
+
+
 /**
  * This Class creates an ai opponent for a human to play against. 
  * The AI goes second and plays according to a minimax algorithm
@@ -11,6 +14,7 @@ import java.util.Map;
  */
 public class AIPlayer extends Player {
 	//Proper Practice here?
+	public int numRecursions=0;
 	private final int DEFAULT_DEPTH = 8;
 	private int depth;
 	
@@ -78,8 +82,7 @@ public class AIPlayer extends Player {
 	 */
 	@Override
 	public Move getMove(Board current){
-		Move m= new Move();
-		int best = -999999;
+		
 		ArrayList<Move> list = new ArrayList<Move>();
 		for(int r=0 ; r < current.BOARD_SIZE ; r++){
 			for(int c = 0; c < current.BOARD_SIZE; c++){
@@ -89,7 +92,10 @@ public class AIPlayer extends Player {
 				}
 			}
 		}
-		return(list.get(max(current,depth,list)));
+		Move result = new Move(list.get(max(current,0,list)));
+		System.out.println(numRecursions);
+		numRecursions = 0;
+		return(result);
 		/*HashMap<Move, Integer> move = new HashMap<Move, Integer>();
 		move.putAll(max(current,0,m));		
 		for(int r=0; r<current.BOARD_SIZE; r++){
@@ -113,7 +119,9 @@ public class AIPlayer extends Player {
 	 * 				back up to aiMove.
 	 */
 	public /*Map<Move, Integer>*/int max(Board iterated, int n , ArrayList<Move> moves){
-		if(n==depth){
+		
+		if(n==depth || iterated.isBoardFull()){
+			numRecursions++;
 			return iterated.getNumTiles(color);
 		}
 		
@@ -127,7 +135,7 @@ public class AIPlayer extends Player {
 
 		Board copy = new Board(iterated);
 		int maxScore=0;
-		int aryLstNum = -1;
+		ArrayList<Integer> moveIndex = new ArrayList<>();
 		for(int i=0;i<moves.size();i++){
 			try{
 				copy.makeMove(moves.get(i));
@@ -141,18 +149,20 @@ public class AIPlayer extends Player {
 					}
 				}
 				int temp =min(copy, n+1, list);
-				if(maxScore<temp){
+				if(maxScore<=temp){
 					maxScore=temp;
 					if(n==0){
-						aryLstNum=i;
+						moveIndex.add(i);
 					}
 				}
-				
+
 			}
 			catch(Exception e){
-				System.out.println("NO!!!!!!!!!");
+				//System.out.println("NO!!!!!!!!!");
 			}
 		}
+		Random rnd = new Random();
+		int aryLstNum = (rnd.nextInt(119)%moveIndex.size());
 		if(n==0){
 			return aryLstNum;//element num of best move
 		}
@@ -222,21 +232,14 @@ public class AIPlayer extends Player {
 	 * 				back up to aiMove.
 	 */
 	public int/*Map<Move, Integer>*/ min(Board iterated, int n, ArrayList<Move> moves){
-		if(n==depth){
+		
+		if(n==depth || iterated.isBoardFull()){
+			numRecursions++;
 			return iterated.getNumTiles(color);
 		}
 		
-		/*SquareStatus opposingColor;
-		if(color == SquareStatus.BLACK){
-			opposingColor = SquareStatus.WHITE;
-		}
-		else{
-			opposingColor = SquareStatus.BLACK;
-		}*/
-
 		Board copy = new Board(iterated);
-		int maxScore=0;
-		int aryLstNum = -1;
+		int minScore=0;
 		for(int i=0;i<moves.size();i++){
 			try{
 				copy.makeMove(moves.get(i));
@@ -249,23 +252,17 @@ public class AIPlayer extends Player {
 						}
 					}
 				}
-				int temp =min(copy, n+1, list);
-				if(maxScore<temp){
-					maxScore=temp;
-					if(n==0){
-						aryLstNum=i;
-					}
+				int temp = max(copy, n+1, list);
+				if(minScore>temp){
+					minScore=temp;
 				}
 				
 			}
 			catch(Exception e){
-				System.out.println("NO!!!!!!!!!");
+				//System.out.println("NO!!!!!!!!!");
 			}
 		}
-		if(n==0){
-			return aryLstNum;//element num of best move
-		}
-		return maxScore;
+		return minScore;
 		/*if(n==depth){
 			HashMap<Move, Integer> score = new HashMap<Move, Integer>();
 			score.put(m, iterated.getNumTiles(color));
