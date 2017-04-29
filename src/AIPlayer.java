@@ -13,6 +13,11 @@ import java.util.Random;
  *
  */
 public class AIPlayer extends Player {
+	
+	@Override
+	public boolean isAI(){
+		return true;
+	}
 	//Proper Practice here?
 	public int numRecursions=0;
 	private final int DEFAULT_DEPTH = 8;
@@ -92,7 +97,12 @@ public class AIPlayer extends Player {
 				}
 			}
 		}
-		Move result = new Move(list.get(max(current,0,list)));
+		int index = max(current,0,list,100,-1);
+		if(index==-1){
+			Move noValidMove = new Move();
+			return noValidMove;
+		}
+		Move result = new Move(list.get(index));
 		System.out.println(numRecursions);
 		numRecursions = 0;
 		return(result);
@@ -118,7 +128,7 @@ public class AIPlayer extends Player {
 	 * 				Integer value as the value. This is how all pertinent information is relayed
 	 * 				back up to aiMove.
 	 */
-	public /*Map<Move, Integer>*/int max(Board iterated, int n , ArrayList<Move> moves){
+	public int max(Board iterated, int n, ArrayList<Move> moves, int minBeta ,int minAlpha){
 		
 		if(n==depth || iterated.isBoardFull()){
 			numRecursions++;
@@ -134,172 +144,105 @@ public class AIPlayer extends Player {
 		}
 
 		Board copy = new Board(iterated);
-		int maxScore=0;
+		int maxScore=-1;
+		int alpha = minBeta;
+		int beta = minAlpha;
 		ArrayList<Integer> moveIndex = new ArrayList<>();
 		for(int i=0;i<moves.size();i++){
 			try{
 				copy.makeMove(moves.get(i));
-				ArrayList<Move> list = new ArrayList<>();
-				for(int r=0;r<copy.BOARD_SIZE;r++){
-					for(int c=0;c<copy.BOARD_SIZE;c++){
-						Move layer = new Move(r,c,opposingColor);
-						if (copy.isLegalMove(layer)){
-							list.add(layer);
-						}
-					}
-				}
-				int temp =min(copy, n+1, list);
-				if(maxScore<=temp){
-					maxScore=temp;
-					if(n==0){
-						moveIndex.add(i);
-					}
-				}
-
 			}
 			catch(Exception e){
 				//System.out.println("NO!!!!!!!!!");
 			}
+			ArrayList<Move> list = new ArrayList<>();
+			for(int r=0;r<copy.BOARD_SIZE;r++){
+				for(int c=0;c<copy.BOARD_SIZE;c++){
+					Move layer = new Move(r,c,opposingColor);
+					if (copy.isLegalMove(layer)){
+						list.add(layer);
+					}
+				}
+			}
+			int temp =min(copy, n+1, list, beta, alpha);
+			if(temp>=alpha){
+				return temp;
+			}
+			if(maxScore<=temp){
+				maxScore=temp;
+				beta = maxScore;
+				if(n==0){
+					moveIndex.add(i);
+				}
+			}
+
 		}
 		Random rnd = new Random();
-		int aryLstNum = (rnd.nextInt(119)%moveIndex.size());
+		int aryLstNum=-1;
+		if(moveIndex.size()!=0){
+			aryLstNum = (rnd.nextInt(119)%moveIndex.size());
+		}
 		if(n==0){
 			return aryLstNum;//element num of best move
 		}
 		return maxScore;
 		
-		/*if(n==depth){
-			HashMap<Move, Integer> score = new HashMap<Move,Integer>();
-			score.put(m, iterated.getNumTiles(color));
-			return score;
-		}
-		Board copy = new Board(iterated);
-		Map<Move, Integer> currentMax = new HashMap<Move, Integer>();
-		if(n==0){
-			currentMax.put(m, -9999999);
-		}
-		Move currentMaxMove;
-		if(m.getColor()==SquareStatus.EMPTY){
-			currentMaxMove=null;
-		}
-		else{
-			currentMaxMove= new Move(m);
-		}
-		for(int r=0;r<copy.BOARD_SIZE;r++){
-			for(int c=0;c<copy.BOARD_SIZE;c++){
-				if (copy.getSquareStatus(r,c)==SquareStatus.EMPTY){
-					Move move = new Move(r,c,color);
-					if(copy.isLegalMove(move)){
-						try{
-							copy.makeMove(move);
-						}
-						catch(Exception e){
-							e.getMessage();
-							break;
-						}
-						if(n==0){
-							currentMax.clear();
-							currentMaxMove = new Move(move);
-						}
-						if(currentMax.isEmpty()){
-							Map<Move, Integer> tempMax = new HashMap<Move, Integer>();
-							tempMax.putAll(min(copy, n+1, move)); 
-							currentMax.replace(currentMaxMove, tempMax.get(move));
-						}
-						else{
-							Map<Move, Integer> tempMax = new HashMap<Move, Integer>();
-							tempMax.putAll(min(copy, n+1, m));
-							if(currentMax.get(currentMaxMove)<tempMax.get(move)){
-								currentMax.replace(currentMaxMove, tempMax.get(move));
-							}
-						}
-					}
-				}
-			}
-		}
-		return currentMax;*/
+		
 	}
 
 	
 	/**
+	 * 
 	 * This method is the min portion of minimax, and as such finds the worst possible
-	 * move(for the ai) that the human can make
+	 * move(for the ai) that the other player can make.
 	 * @param iterated 	Board Object passed from max. It is a projected move possibility
 	 * @param n			Keeps track of recursion layer
-	 * @param m			Move Object that allows the min/max chain to keep track of move to pass up chain
-	 * @return			Returns a Map that uses a Move object as the key and an 
-	 * 				Integer value as the value. This is how all pertinent information is relayed
-	 * 				back up to aiMove.
+	 * @param moves		ArrayList of valid moves
+	 * @param beta		The best the recursion process can do.
+	 * @return			Returns an integer that represents the number of tiles of its
+	 * 						colour after the end of the recursion. If it is recursion 0,
+	 * 						it returns the index of the best move.
 	 */
-	public int/*Map<Move, Integer>*/ min(Board iterated, int n, ArrayList<Move> moves){
+	public int min(Board iterated, int n, ArrayList<Move> moves, int maxBeta, int maxAlpha){
 		
 		if(n==depth || iterated.isBoardFull()){
 			numRecursions++;
 			return iterated.getNumTiles(color);
 		}
 		
+		int minScore=100;
+		int alpha = maxBeta;
+		int beta = maxAlpha;
 		Board copy = new Board(iterated);
-		int minScore=0;
+		
 		for(int i=0;i<moves.size();i++){
 			try{
-				copy.makeMove(moves.get(i));
-				ArrayList<Move> list = new ArrayList<>();
-				for(int r=0;r<copy.BOARD_SIZE;r++){
-					for(int c=0;c<copy.BOARD_SIZE;c++){
-						Move layer = new Move(r,c,color);
-						if (copy.isLegalMove(layer)){
-							list.add(layer);
-						}
-					}
-				}
-				int temp = max(copy, n+1, list);
-				if(minScore>temp){
-					minScore=temp;
-				}
-				
+				copy.makeMove(moves.get(i));				
 			}
 			catch(Exception e){
 				//System.out.println("NO!!!!!!!!!");
 			}
-		}
-		return minScore;
-		/*if(n==depth){
-			HashMap<Move, Integer> score = new HashMap<Move, Integer>();
-			score.put(m, iterated.getNumTiles(color));
-			return score;
-		}
-		Board copy = new Board(iterated);
-		Map<Move, Integer> currentMin = new HashMap<Move, Integer>();
-		Move currentMinMove=new Move(m);
-		for(int r=0;r<copy.BOARD_SIZE;r++){
-			for(int c=0;c<copy.BOARD_SIZE;c++){
-				if (copy.getSquareStatus(r,c)==SquareStatus.EMPTY){
-					Move move = new Move(r,c,SquareStatus.BLACK);
-					if(copy.isLegalMove(move)){
-						try{
-							copy.makeMove(move);
-						}
-						catch(Exception e){
-							e.getMessage();
-							break;
-						}
-						if(currentMin.isEmpty()){
-							Map<Move, Integer> tempMax = new HashMap<Move, Integer>();
-							tempMax.putAll(min(copy, n+1, move)); 
-							currentMin.replace(currentMinMove, tempMax.get(move));
-						}
-						else{
-							Map<Move, Integer> tempMax = new HashMap<Move, Integer>();
-							tempMax.putAll(min(copy, n+1, m));
-							if(currentMin.get(currentMinMove)>tempMax.get(m)){
-								currentMin.replace(currentMinMove, tempMax.get(move));
-							}
-						}
+			ArrayList<Move> list = new ArrayList<>();
+			for(int r=0;r<copy.BOARD_SIZE;r++){
+				for(int c=0;c<copy.BOARD_SIZE;c++){
+					Move layer = new Move(r,c,color);
+					if (copy.isLegalMove(layer)){
+						list.add(layer);
 					}
 				}
 			}
+			int temp = max(copy, n+1, list, beta, alpha);
+			//TODO: alpha-beta
+			if(temp<=alpha){
+				return temp;
+			}
+			else if(minScore>temp){
+				minScore=temp;
+				beta = minScore;
+			}
 		}
-		return currentMin;*/
+		return minScore;
+		
 	}
 
 }

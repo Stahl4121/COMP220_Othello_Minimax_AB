@@ -26,5 +26,7 @@ public abstract class Player {
 	 * @return A Move object, the player's move
 	 */
 	abstract public Move getMove(Board current);
+	
+	abstract public boolean isAI();
 
 }

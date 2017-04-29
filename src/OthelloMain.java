@@ -44,7 +44,7 @@ public class OthelloMain {
 
 			if (choice == 1){
 				player1 = new HumanPlayer();
-				player2 = new AIPlayer();
+				player2 = new AIPlayer(4);
 				break;
 			}
 			else if (choice == 2){
@@ -77,11 +77,27 @@ public class OthelloMain {
 				try{
 
 					if(isPlayerOne){
-						othelloBoard.makeMove(player1.getMove(othelloBoard));
+						Move tbp = new Move(player1.getMove(othelloBoard));
+						if(player1.isAI()){
+							if (tbp.getRow()==-1&&tbp.getCol()==-1){
+								System.out.println("AI has no valid Moves.");
+								isValidMove = true;
+								isPlayerOne = false;
+							}
+						}
+						othelloBoard.makeMove(tbp);
 						isPlayerOne = false;
 					}
 					else{
-						othelloBoard.makeMove(player2.getMove(othelloBoard));
+						Move tbp = new Move(player2.getMove(othelloBoard));
+						if(player2.isAI()){
+							if (tbp.getRow()==-1&&tbp.getCol()==-1){
+								System.out.println("AI has no valid Moves.");
+								isValidMove = true;
+								isPlayerOne = true;
+							}
+						}
+						othelloBoard.makeMove(tbp);
 						isPlayerOne = true;
 					}
 

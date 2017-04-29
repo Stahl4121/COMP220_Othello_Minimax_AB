@@ -7,6 +7,11 @@ import java.util.Scanner;
  *
  */
 public class HumanPlayer extends Player {
+	
+	@Override
+	public boolean isAI(){
+		return false;
+	}
 
 	public HumanPlayer(){
 		this.color = SquareStatus.BLACK;
