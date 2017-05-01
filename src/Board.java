@@ -1,4 +1,5 @@
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This class contains the large majority
@@ -88,7 +89,7 @@ public class Board {
 			throw new Exception ("Invalid move.");
 		}
 
-		ArrayList<int[]> critPieces = findCriticalPieces(move);
+		Set<int[]> critPieces = findCriticalPieces(move);
 
 		board[move.getRow()][move.getCol()] = move.getColor();	
 
@@ -106,9 +107,9 @@ public class Board {
 	 * point around a given position.
 	 * @param move
 	 */
-	private ArrayList<int[]> findCriticalPieces(Move move){
+	private Set<int[]> findCriticalPieces(Move move){
 
-		ArrayList<int[]> criticalPieces = new ArrayList<int[]>();
+		Set<int[]> criticalPieces = new HashSet<int[]>();
 
 		for(int r = move.getRow()-1; r <= (move.getRow() + 1); r++){
 			for(int c = move.getCol()-1; c <= (move.getCol() + 1); c++){
