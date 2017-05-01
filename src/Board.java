@@ -281,6 +281,20 @@ public class Board {
 
 		return true;
 	}
+	
+	public boolean areAvailableMoves(SquareStatus color){
+		
+		for(int r = 0 ; r < BOARD_SIZE ; r++){
+			for(int c = 0; c < BOARD_SIZE; c++){
+				Move m = new Move(r,c,color);
+				if(isLegalMove(m)){
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
 
 	/**
 	 * Builds and returns a string containing
