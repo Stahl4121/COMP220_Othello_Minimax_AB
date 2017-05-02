@@ -104,10 +104,8 @@ public class AIPlayer extends Player {
 	 * move the ai can make
 	 * @param iterated	Board Object passed from max. It is a projected move possibility
 	 * @param n		Iteration counter for recursion
-	 * @param m		Move Object that allows the min/max chain to keep track of move to pass up chain
-	 * @return		Returns a Map that uses a Move object as the key and an 
-	 * 				Integer value as the value. This is how all pertinent information is relayed
-	 * 				back up to aiMove.
+	 * @param moves		ArrayList of legal moves to be tested in this method
+	 * @return		Highest score to min, or index of best move at the top level
 	 */
 	public int max(Board iterated, int n, ArrayList<Move> moves, int minBeta ,int minAlpha){
 		
