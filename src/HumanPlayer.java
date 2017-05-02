@@ -51,12 +51,5 @@ public class HumanPlayer extends Player {
 	
 	}
 
-	/**
-	 * Allows player to start/stop/pause game and/or reset
-	 */
-	public void commands(){
-
-	}
-
 
 }
