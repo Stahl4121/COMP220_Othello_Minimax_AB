@@ -1,4 +1,3 @@
-import java.io.IOException;
 
 /**
  * A Player class for HumanPlayer and 
