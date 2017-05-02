@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-import java.util.Random;
+
 
 
 /**
@@ -10,7 +10,6 @@ import java.util.Random;
  *
  */
 public class AIPlayer extends Player {
-	public int numRecursions=0;
 	private final int DEFAULT_DEPTH = 8;
 	private int depth;
 	
@@ -89,8 +88,6 @@ public class AIPlayer extends Player {
 			}
 		}
 		Move result = new Move(list.get(max(current,0,list)));
-		System.out.println(numRecursions);
-		numRecursions = 0;
 		
 		System.out.println("(" + color + ") Computer, please enter the row and column of your move.");
 		System.out.println(result.getRow() + " " + result.getCol());
@@ -103,18 +100,10 @@ public class AIPlayer extends Player {
 	 * move the ai can make
 	 * @param iterated	Board Object passed from max. It is a projected move possibility
 	 * @param n		Iteration counter for recursion
-	 * @param m		Move Object that allows the min/max chain to keep track of move to pass up chain
-	 * @return		Returns a Map that uses a Move object as the key and an 
-	 * 				Integer value as the value. This is how all pertinent information is relayed
-	 * 				back up to aiMove.
+	 * @param moves		ArrayList of legal moves to be tested in this method
+	 * @return		Highest score to min, or index of best move at the top level
 	 */
 	public int max(Board iterated, int n , ArrayList<Move> moves){
-		
-		if(n==depth || iterated.isBoardFull()){
-			numRecursions++;
-			return iterated.getNumTiles(color);
-		}
-		
 		SquareStatus opposingColor;
 		if(color == SquareStatus.BLACK){
 			opposingColor = SquareStatus.WHITE;
@@ -122,39 +111,39 @@ public class AIPlayer extends Player {
 		else{
 			opposingColor = SquareStatus.BLACK;
 		}
+		if(n==depth || iterated.isBoardFull()||!iterated.areAvailableMoves(opposingColor)){
+			return iterated.getNumTiles(color);
+		}
 
-		Board copy = new Board(iterated);
 		int maxScore=0;
-		ArrayList<Integer> moveIndex = new ArrayList<>();
+		int moveIndex = 0;
 		for(int i=0;i<moves.size();i++){
+			Board copy = new Board(iterated);
 			try{
 				copy.makeMove(moves.get(i));
-				ArrayList<Move> list = new ArrayList<>();
-				for(int r=0;r<copy.BOARD_SIZE;r++){
-					for(int c=0;c<copy.BOARD_SIZE;c++){
-						Move layer = new Move(r,c,opposingColor);
-						if (copy.isLegalMove(layer)){
-							list.add(layer);
-						}
-					}
-				}
-				int temp =min(copy, n+1, list);
-				if(maxScore<=temp){
-					maxScore=temp;
-					if(n==0){
-						moveIndex.add(i);
-					}
-				}
-
 			}
 			catch(Exception e){
-				//System.out.println("NO!!!!!!!!!");
+				System.out.println("NO!!!!!!!!!");
+			}
+			ArrayList<Move> list = new ArrayList<>();
+			for(int r=0;r<copy.BOARD_SIZE;r++){
+				for(int c=0;c<copy.BOARD_SIZE;c++){
+					Move layer = new Move(r,c,opposingColor);
+					if (copy.isLegalMove(layer)){
+						list.add(layer);
+					}
+				}
+			}
+			int temp =min(copy, n+1, list);
+			if(maxScore<temp){
+				maxScore=temp;
+				if(n==0){
+					moveIndex=temp;
+				}
 			}
 		}
-		Random rnd = new Random();
-		int aryLstNum = (rnd.nextInt(119)%moveIndex.size());
 		if(n==0){
-			return aryLstNum;//element num of best move
+			return moveIndex;
 		}
 		return maxScore;
 		
@@ -164,44 +153,38 @@ public class AIPlayer extends Player {
 	 * move(for the ai) that the human can make
 	 * @param iterated 	Board Object passed from max. It is a projected move possibility
 	 * @param n			Keeps track of recursion layer
-	 * @param m			Move Object that allows the min/max chain to keep track of move to pass up chain
-	 * @return			Returns a Map that uses a Move object as the key and an 
-	 * 				Integer value as the value. This is how all pertinent information is relayed
-	 * 				back up to aiMove.
+	 * @param moves		ArrayList of moves to be tested in this method
+	 * @return			Returns lowest score to max
 	 */
 	public int min(Board iterated, int n, ArrayList<Move> moves){
 		
-		if(n==depth || iterated.isBoardFull()){
-			numRecursions++;
+		if(n==depth || iterated.isBoardFull()|| !iterated.areAvailableMoves(color)){
 			return iterated.getNumTiles(color);
 		}
 		
-		Board copy = new Board(iterated);
 		int minScore=0;
 		for(int i=0;i<moves.size();i++){
+			Board copy = new Board(iterated);
 			try{
-				copy.makeMove(moves.get(i));
-				ArrayList<Move> list = new ArrayList<>();
-				for(int r=0;r<copy.BOARD_SIZE;r++){
-					for(int c=0;c<copy.BOARD_SIZE;c++){
-						Move layer = new Move(r,c,color);
-						if (copy.isLegalMove(layer)){
-							list.add(layer);
-						}
-					}
-				}
-				int temp = max(copy, n+1, list);
-				if(minScore>temp){
-					minScore=temp;
-				}
-				
+				copy.makeMove(moves.get(i));				
 			}
 			catch(Exception e){
-				//System.out.println("NO!!!!!!!!!");
+				System.out.println("NO!!!!!!!!!");
+			}
+			ArrayList<Move> list = new ArrayList<>();
+			for(int r=0;r<copy.BOARD_SIZE;r++){
+				for(int c=0;c<copy.BOARD_SIZE;c++){
+					Move layer = new Move(r,c,color);
+					if (copy.isLegalMove(layer)){
+						list.add(layer);
+					}
+				}
+			}
+			int temp = max(copy, n+1, list);
+			if(minScore>temp){
+				minScore=temp;
 			}
 		}
-		return minScore;
-		
+		return minScore;		
 	}
-
 }
