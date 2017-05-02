@@ -14,7 +14,7 @@ public class OthelloMain {
 	 */
 	public static void printSelectionError(){
 		System.out.println("--------------------------------------------");
-		System.out.println("ERROR: Please enter an integer from 1 to 3.");
+		System.out.println("ERROR: Please enter either 1 or 2.");
 		System.out.println("--------------------------------------------");
 	}
 	
@@ -45,7 +45,6 @@ public class OthelloMain {
 			while(true){
 				System.out.println("Enter 1 for Human vs. Computer");
 				System.out.println("Enter 2 for Human vs. Human");
-				System.out.println("Enter 3 for Computer vs. Computer");
 
 				if(scnr.hasNextInt()){
 					choice = scnr.nextInt();
@@ -66,11 +65,6 @@ public class OthelloMain {
 			else if (choice == 2){
 				player1 = new HumanPlayer();
 				player2 = new HumanPlayer(SquareStatus.WHITE);
-				break;
-			}
-			else if (choice == 3){
-				player1 = new AIPlayer(SquareStatus.BLACK);
-				player2 = new AIPlayer();
 				break;
 			}
 			else{

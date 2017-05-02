@@ -174,7 +174,8 @@ public class AIPlayer extends Player {
 				copy.makeMove(moves.get(i));				
 			}
 			catch(Exception e){
-				System.out.println("NO!!!!!!!!!");
+				System.out.println("ERROR: SOMETHING IS TERRIBLY WRONG. This should never trigger.");
+				System.out.println(e.getMessage());
 			}
 			ArrayList<Move> list = new ArrayList<>();
 			for(int r=0;r<copy.BOARD_SIZE;r++){
