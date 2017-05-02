@@ -12,10 +12,6 @@ import java.util.ArrayList;
  */
 public class AIPlayer extends Player {
 	
-	@Override
-	public boolean isAI(){
-		return true;
-	}
 	//Proper Practice here?
 	public int numRecursions=0;
 	private final int DEFAULT_DEPTH = 10;
