@@ -80,7 +80,6 @@ public class AIPlayer extends Player {
 	 */
 	@Override
 	public Move getMove(Board current){
-		System.out.println("(" + color + ") Computer, please enter the row and column of your move.");
 		
 		ArrayList<Move> list = new ArrayList<Move>();
 		for(int r=0 ; r < current.BOARD_SIZE ; r++){
