@@ -93,12 +93,9 @@ public class AIPlayer extends Player {
 			}
 		}
 		int index = max(current,0,list,100,-1);
-		if(index==-1){
-			Move noValidMove = new Move();
-			return noValidMove;
-		}
 		Move result = new Move(list.get(index));
-
+		
+		System.out.println(result.getRow() + " " + result.getCol());
 		return(result);
 	}
 
