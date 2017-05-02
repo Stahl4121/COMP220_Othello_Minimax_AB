@@ -10,7 +10,6 @@ import java.util.Random;
  *
  */
 public class AIPlayer extends Player {
-	//Proper Practice here?
 	public int numRecursions=0;
 	private final int DEFAULT_DEPTH = 8;
 	private int depth;
@@ -92,6 +91,10 @@ public class AIPlayer extends Player {
 		Move result = new Move(list.get(max(current,0,list)));
 		System.out.println(numRecursions);
 		numRecursions = 0;
+		
+		System.out.println("(" + color + ") Computer, please enter the row and column of your move.");
+		System.out.println(result.getRow() + " " + result.getCol());
+		
 		return(result);	
 	}
 

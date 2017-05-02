@@ -282,9 +282,9 @@ public class Board {
 
 		return true;
 	}
-	
+
 	public boolean areAvailableMoves(SquareStatus color){
-		
+
 		for(int r = 0 ; r < BOARD_SIZE ; r++){
 			for(int c = 0; c < BOARD_SIZE; c++){
 				Move m = new Move(r,c,color);
@@ -293,8 +293,26 @@ public class Board {
 				}
 			}
 		}
-		
+
 		return false;
+	}
+
+	public void endGame(){
+		System.out.println("Final Board: ");
+		System.out.println(toString());
+
+		int blackTiles = getNumTiles(SquareStatus.BLACK);
+		int whiteTiles = getNumTiles(SquareStatus.WHITE);
+
+		if(blackTiles > whiteTiles){
+			blackTiles += (64 - blackTiles - whiteTiles);
+			System.out.println("Black wins " + blackTiles + " - " + whiteTiles + " !");
+		}
+		else if(whiteTiles > blackTiles){
+			whiteTiles += (64 - blackTiles - whiteTiles);
+			System.out.println("White wins " + whiteTiles + " - " + blackTiles + " !");
+		}
+
 	}
 
 	/**
@@ -314,10 +332,10 @@ public class Board {
 			for(int c = 0; c < BOARD_SIZE; c++){
 
 				if (board[r][c] == SquareStatus.BLACK){
-					sb.append("X ");
+					sb.append("B ");
 				}
 				else if (board[r][c] == SquareStatus.WHITE){
-					sb.append("O ");
+					sb.append("W ");
 				}
 				else{
 					sb.append("- ");
@@ -325,7 +343,6 @@ public class Board {
 			}
 			sb.append("\n");
 		}
-		sb.append("\n");
 
 		return sb.toString();		
 	}

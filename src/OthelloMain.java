@@ -13,6 +13,11 @@ public class OthelloMain {
 		System.out.println("ERROR: Please enter an integer from 1 to 3.");
 		System.out.println("--------------------------------------------");
 	}
+	public static void printNoMoves(Player p){
+		System.out.println("-----------------------------------------------------------------");
+		System.out.println("(" + p.getColor() + ")" + " There are no legal moves available. Skipping turn.");
+		System.out.println("-----------------------------------------------------------------");
+	}
 
 	public static void main (String[] args){
 
@@ -66,33 +71,57 @@ public class OthelloMain {
 		
 		boolean isValidMove;
 		boolean isPlayerOne = true;
+		boolean noMovesPlayerOne = false;
 
 		while(! othelloBoard.isBoardFull())
 		{
+			System.out.println("----------------------------------------------------------------------------");
 			System.out.print(othelloBoard.toString());
+			System.out.println("----------------------------------------------------------------------------");
+
 			
 			isValidMove = false;
 
+			if(isPlayerOne && !othelloBoard.areAvailableMoves(player1.getColor())){
+				printNoMoves(player1);
+				isPlayerOne = !isPlayerOne;
+				noMovesPlayerOne = true;
+			}
+			
+			if(!isPlayerOne && !othelloBoard.areAvailableMoves(player2.getColor())){
+				printNoMoves(player2);
+				isPlayerOne = !isPlayerOne;
+				
+				if(noMovesPlayerOne){
+					break;
+				}
+			}
+			noMovesPlayerOne = false;
+
+			
 			while ( !isValidMove){
 				try{
-
 					if(isPlayerOne){
 						othelloBoard.makeMove(player1.getMove(othelloBoard));
-						isPlayerOne = false;
 					}
 					else{
 						othelloBoard.makeMove(player2.getMove(othelloBoard));
-						isPlayerOne = true;
 					}
 
+					isPlayerOne = !isPlayerOne;
 					isValidMove = true;
 				}
 				catch(Exception e){
 					System.out.println(e);
 				}
+				
 			}
 
 		}
+
+		System.out.println("----------------------------------------------------------------------------");
+		othelloBoard.endGame();
+		System.out.println("----------------------------------------------------------------------------");
 
 
 		scnr.close();
