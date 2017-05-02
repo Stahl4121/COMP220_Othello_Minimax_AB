@@ -34,6 +34,7 @@ public class Board {
 			}
 		}
 
+		//Sets the initial pieces of the board
 		this.board[3][3] = SquareStatus.WHITE;
 		this.board[4][4] = SquareStatus.WHITE;
 		this.board[3][4] = SquareStatus.BLACK;
@@ -61,7 +62,6 @@ public class Board {
 			}
 		}
 
-		//criticalPieces = new ArrayList<int[]>();
 	}
 
 
@@ -85,6 +85,7 @@ public class Board {
 	 * @throws Exception, an error that the move is illegal
 	 */
 	public void makeMove(Move move) throws Exception{
+		
 		if(! (isLegalMove(move))){
 			throw new Exception ("Invalid move.");
 		}
@@ -101,11 +102,12 @@ public class Board {
 
 	/**
 	 * THis method finds the locations of"critical pieces"
-	 * and adds them to the corresponding ArrayList. Critical 
+	 * and adds them to the corresponding set. Critical 
 	 * pieces are pieces which begin the flipping process from
 	 * a new piece. There are 8 possible positions of a critical
 	 * point around a given position.
-	 * @param move
+	 * @param move The move being attempted
+	 * @return A set containing the coords of critical pieces
 	 */
 	private Set<int[]> findCriticalPieces(Move move){
 
@@ -188,9 +190,9 @@ public class Board {
 	}
 
 	/**
-	 * Checks if the attempted move is valid. Checks
-	 * that the move is within the board, filling an
-	 * empty space, and will lead to flipped tiles, i.e.,
+	 * Checks if the attempted move is valid.
+	 * Check isAvailableMove and checks if move
+	 * will lead to flipped tiles, i.e.,
 	 * has critical pieces.
 	 * 
 	 * @param move The move being attempted.
@@ -208,6 +210,12 @@ public class Board {
 		return true;
 	}
 
+	/**
+	 * Checks that the move is within the board and
+	 * filling an empty space.
+	 * @param move The move being attempted.
+	 * @return A boolean of whether the move is available
+	 */
 	private boolean isAvalableMove(Move move){
 
 		if( !(isInBoard(move.getRow(), move.getCol())) ){
@@ -272,6 +280,13 @@ public class Board {
 		return true;
 	}
 
+	/**
+	 * Checks if there are any available moves in the
+	 * board for the given color.
+	 * 
+	 * @param color The color being checked for possible moves.
+	 * @return A boolean of whether there are any possible moves.
+	 */
 	public boolean areAvailableMoves(SquareStatus color){
 
 		for(int r = 0 ; r < BOARD_SIZE ; r++){
@@ -286,6 +301,11 @@ public class Board {
 		return false;
 	}
 
+	/**
+	 * Prints the results for the end of the game
+	 * , including the final board, winner, and score.
+	 *  
+	 */
 	public void endGame(){
 		System.out.println("Final Board: ");
 		System.out.println(toString());
@@ -294,12 +314,17 @@ public class Board {
 		int whiteTiles = getNumTiles(SquareStatus.WHITE);
 
 		if(blackTiles > whiteTiles){
+			//Convention states empty tiles go towards winner
 			blackTiles += (64 - blackTiles - whiteTiles);
 			System.out.println("Black wins " + blackTiles + " - " + whiteTiles + " !");
 		}
 		else if(whiteTiles > blackTiles){
+			//Convention states empty tiles go towards winner
 			whiteTiles += (64 - blackTiles - whiteTiles);
 			System.out.println("White wins " + whiteTiles + " - " + blackTiles + " !");
+		}
+		else{
+			System.out.println("White and black tied " + whiteTiles + " - " + blackTiles + " !");
 		}
 
 	}

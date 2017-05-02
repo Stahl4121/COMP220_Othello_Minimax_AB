@@ -6,13 +6,22 @@ import java.util.Scanner;
  *
  */
 public class OthelloMain {
+	//Eliminates some nasty bugs from having multiple System.in scanners
 	public static Scanner scnr = new Scanner(System.in);
 	
+	/**
+	 * Prints an error if the user has entered an invalid integer choice.
+	 */
 	public static void printSelectionError(){
 		System.out.println("--------------------------------------------");
 		System.out.println("ERROR: Please enter an integer from 1 to 3.");
 		System.out.println("--------------------------------------------");
 	}
+	
+	/**
+	 * Prints a message when there are no available moves.
+	 * @param p The player that has no possible moves.
+	 */
 	public static void printNoMoves(Player p){
 		System.out.println("-----------------------------------------------------------------");
 		System.out.println("(" + p.getColor() + ")" + " There are no legal moves available. Skipping turn.");
@@ -23,10 +32,12 @@ public class OthelloMain {
 
 		Board othelloBoard = new Board();
 		
-
+		//Player references are made, but not initialized to types
 		Player player1;
 		Player player2;
 
+		
+		//This loop handles the user's game choice
 		while(true){
 
 			int choice = 0;
@@ -73,6 +84,7 @@ public class OthelloMain {
 		boolean isPlayerOne = true;
 		boolean noMovesPlayerOne = false;
 
+		//Game Loop
 		while(! othelloBoard.isBoardFull())
 		{
 			System.out.println("----------------------------------------------------------------------------");
@@ -92,13 +104,14 @@ public class OthelloMain {
 				printNoMoves(player2);
 				isPlayerOne = !isPlayerOne;
 				
+				//This will exit the loop and end the game, bc both players have no possible moves
 				if(noMovesPlayerOne){
 					break;
 				}
 			}
 			noMovesPlayerOne = false;
 
-			
+			//Loop ensures a valid move is always provided
 			while ( !isValidMove){
 				try{
 					if(isPlayerOne){

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 /**
  * This Class creates an ai opponent for a human to play against. 
+ * It inherits from the Player class, implementing the getMove method.
  * The AI goes second and plays according to a minimax algorithm
  * set to a specific depth.
  * @author MUMAWBM1 & STAHLLR1
