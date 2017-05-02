@@ -138,7 +138,7 @@ public class AIPlayer extends Player {
 			if(maxScore<temp){
 				maxScore=temp;
 				if(n==0){
-					moveIndex=temp;
+					moveIndex=i;
 				}
 			}
 		}
@@ -162,7 +162,7 @@ public class AIPlayer extends Player {
 			return iterated.getNumTiles(color);
 		}
 		
-		int minScore=0;
+		int minScore=64;
 		for(int i=0;i<moves.size();i++){
 			Board copy = new Board(iterated);
 			try{
@@ -181,7 +181,7 @@ public class AIPlayer extends Player {
 				}
 			}
 			int temp = max(copy, n+1, list);
-			if(minScore>temp){
+			if(temp<minScore){
 				minScore=temp;
 			}
 		}
