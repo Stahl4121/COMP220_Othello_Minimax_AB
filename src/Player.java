@@ -1,3 +1,4 @@
+import java.io.IOException;
 
 /**
  * A Player class for HumanPlayer and 
@@ -11,12 +12,6 @@
 public abstract class Player {
 	protected SquareStatus color;
 	
-	
-//	public Player(SquareStatus color){
-//		this.color = color;
-//	}
-	
-	
 	/**
 	 * A method overwritten in both child classes,
 	 * allowing child classes to determine and
@@ -27,11 +22,13 @@ public abstract class Player {
 	abstract public Move getMove(Board current);
 	
 	/**
-	 * A method overwritten in both child classes, allowing for odd edge cases
-	 * with the ai.
+	 * A simple getter for the 
+	 * player's color.
 	 * 
-	 * @return A boolean, whether or not it is an ai.
+	 * @return The player's color
 	 */
-	abstract public boolean isAI();
+	public SquareStatus getColor(){
+		return color;
+	}
 
 }
