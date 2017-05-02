@@ -1,5 +1,4 @@
-import java.io.IOException;
-import java.util.Scanner;
+
 
 /**
  * This is a class for the human players. It inherits from player
