@@ -10,7 +10,7 @@ import java.util.ArrayList;
  *
  */
 public class AIPlayer extends Player {
-	private final int DEFAULT_DEPTH = 8;
+	private final int DEFAULT_DEPTH = 6;
 	private int depth;
 	
 	/**
@@ -112,8 +112,10 @@ public class AIPlayer extends Player {
 		else{
 			opposingColor = SquareStatus.BLACK;
 		}
+		//If any of the termination conditions are met, the ai will terminate that branch 
+		//then return the number of tiles that are it's colour.
 		if(n==depth || iterated.isBoardFull()||!iterated.areAvailableMoves(opposingColor)){
-			return iterated.getNumTiles(color);
+			return iterated.getNumTiles(color);		
 		}
 
 		int maxScore=0;
@@ -129,24 +131,24 @@ public class AIPlayer extends Player {
 			ArrayList<Move> list = new ArrayList<>();
 			for(int r=0;r<copy.BOARD_SIZE;r++){
 				for(int c=0;c<copy.BOARD_SIZE;c++){
-					Move layer = new Move(r,c,opposingColor);
+					Move layer = new Move(r,c,opposingColor);	//makes ArrayList of moves to bo tested in min
 					if (copy.isLegalMove(layer)){
 						list.add(layer);
 					}
 				}
 			}
-			int temp =min(copy, n+1, list);
-			if(maxScore<temp){
+			int temp =min(copy, n+1, list);	//recursion(by way of min)
+			if(maxScore<temp){	//tries to maximize the score returned
 				maxScore=temp;
-				if(n==0){
+				if(n==0){		// updates the index of move to be returned.
 					moveIndex=i;
 				}
 			}
 		}
 		if(n==0){
-			return moveIndex;
+			return moveIndex;			//if this is the top-most recursion, it returns an index
 		}
-		return maxScore;
+		return maxScore;				//returns the best score for this branch
 		
 	}	
 	/**
@@ -158,12 +160,13 @@ public class AIPlayer extends Player {
 	 * @return			Returns lowest score to max
 	 */
 	public int min(Board iterated, int n, ArrayList<Move> moves){
-		
+		//If any of the termination conditions are met, the ai will terminate that branch 
+		//then return the number of tiles that are it's colour.
 		if(n==depth || iterated.isBoardFull()|| !iterated.areAvailableMoves(color)){
 			return iterated.getNumTiles(color);
 		}
 		
-		int minScore=64;
+		int minScore=65;
 		for(int i=0;i<moves.size();i++){
 			Board copy = new Board(iterated);
 			try{
@@ -175,17 +178,17 @@ public class AIPlayer extends Player {
 			ArrayList<Move> list = new ArrayList<>();
 			for(int r=0;r<copy.BOARD_SIZE;r++){
 				for(int c=0;c<copy.BOARD_SIZE;c++){
-					Move layer = new Move(r,c,color);
+					Move layer = new Move(r,c,color);	//makes ArrayList of moves to be tested in max
 					if (copy.isLegalMove(layer)){
 						list.add(layer);
 					}
 				}
 			}
 			int temp = max(copy, n+1, list);
-			if(temp<minScore){
+			if(temp<minScore){	//tries to minimize the possible score.
 				minScore=temp;
 			}
 		}
-		return minScore;		
+		return minScore;		//returns worst score for this branch	
 	}
 }
