@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 
 
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 public class AIPlayer extends Player {
 	
 	//Proper Practice here?
-	public int numRecursions=0;
+
 	private final int DEFAULT_DEPTH = 10;
 	private int depth;
 	
@@ -97,19 +96,8 @@ public class AIPlayer extends Player {
 			return noValidMove;
 		}
 		Move result = new Move(list.get(index));
-		System.out.println(numRecursions);
-		numRecursions = 0;
+
 		return(result);
-		/*HashMap<Move, Integer> move = new HashMap<Move, Integer>();
-		move.putAll(max(current,0,m));		
-		for(int r=0; r<current.BOARD_SIZE; r++){
-			for(int c=0; c<current.BOARD_SIZE;c++){
-				Move query = new Move(r, c, color);
-				if(move.containsKey(query)){
-					m=new Move(query);
-				}
-			}
-		}*/		
 	}
 
 	/**
@@ -124,11 +112,6 @@ public class AIPlayer extends Player {
 	 */
 	public int max(Board iterated, int n, ArrayList<Move> moves, int minBeta ,int minAlpha){
 		
-		if(n==depth || iterated.isBoardFull()){
-			numRecursions++;
-			return iterated.getNumTiles(color);
-		}
-		
 		SquareStatus opposingColor;
 		if(color == SquareStatus.BLACK){
 			opposingColor = SquareStatus.WHITE;
@@ -136,7 +119,10 @@ public class AIPlayer extends Player {
 		else{
 			opposingColor = SquareStatus.BLACK;
 		}
-
+		
+		if(n==depth || iterated.isBoardFull()||iterated.areAvailableMoves(opposingColor)){
+			return iterated.getNumTiles(color);
+		}
 		
 		int maxScore=-1;
 		int alpha = minBeta;
@@ -148,7 +134,7 @@ public class AIPlayer extends Player {
 				copy.makeMove(moves.get(i));
 			}
 			catch(Exception e){
-				//System.out.println("NO!!!!!!!!!");
+				System.out.println("NO!!!!!!!!!");
 			}
 			ArrayList<Move> list = new ArrayList<>();
 			for(int r=0;r<copy.BOARD_SIZE;r++){
@@ -195,8 +181,8 @@ public class AIPlayer extends Player {
 	 */
 	public int min(Board iterated, int n, ArrayList<Move> moves, int maxBeta, int maxAlpha){
 		
-		if(n==depth || iterated.isBoardFull()){
-			numRecursions++;
+		if(n==depth || iterated.isBoardFull()||iterated.areAvailableMoves(color)){
+
 			return iterated.getNumTiles(color);
 		}
 		
@@ -210,7 +196,7 @@ public class AIPlayer extends Player {
 				copy.makeMove(moves.get(i));				
 			}
 			catch(Exception e){
-				//System.out.println("NO!!!!!!!!!");
+				System.out.println("NO!!!!!!!!!");
 			}
 			ArrayList<Move> list = new ArrayList<>();
 			for(int r=0;r<copy.BOARD_SIZE;r++){
@@ -222,7 +208,6 @@ public class AIPlayer extends Player {
 				}
 			}
 			int temp = max(copy, n+1, list, beta, alpha);
-			//TODO: alpha-beta
 			if(temp<=alpha){
 				return temp;
 			}
