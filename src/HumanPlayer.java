@@ -1,16 +1,14 @@
-
 /**
- * This is A stub for a human player class which may or may not be used.
- * @author MUMAWBM1
+ * This is a class for the human players. It inherits from player
+ * and provides necessary function for accepting player input.
+ * @author STAHLLR1 & MUMAWBM1
  *
  */
 public class HumanPlayer extends Player {
-	
-	@Override
-	public boolean isAI(){
-		return false;
-	}
 
+	/**
+	 * The defailt constructor for
+	 */
 	public HumanPlayer(){
 		this.color = SquareStatus.BLACK;
 	}
@@ -53,13 +51,4 @@ public class HumanPlayer extends Player {
 		}
 	
 	}
-
-	/**
-	 * Allows player to start/stop/pause game and/or reset
-	 */
-	public void commands(){
-
-	}
-
-
 }
