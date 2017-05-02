@@ -18,7 +18,7 @@ public class AIPlayer extends Player {
 	}
 	//Proper Practice here?
 	public int numRecursions=0;
-	private final int DEFAULT_DEPTH = 8;
+	private final int DEFAULT_DEPTH = 10;
 	private int depth;
 	
 	/**
@@ -141,12 +141,13 @@ public class AIPlayer extends Player {
 			opposingColor = SquareStatus.BLACK;
 		}
 
-		Board copy = new Board(iterated);
+		
 		int maxScore=-1;
 		int alpha = minBeta;
 		int beta = minAlpha;
-		ArrayList<Integer> moveIndex = new ArrayList<>();
+		int index = 0;
 		for(int i=0;i<moves.size();i++){
+			Board copy = new Board(iterated);
 			try{
 				copy.makeMove(moves.get(i));
 			}
@@ -166,22 +167,17 @@ public class AIPlayer extends Player {
 			if(temp>=alpha){
 				return temp;
 			}
-			if(maxScore<=temp){
+			if(maxScore<temp){
 				maxScore=temp;
 				beta = maxScore;
 				if(n==0){
-					moveIndex.add(i);
+					index=i;
 				}
 			}
 
 		}
-		Random rnd = new Random();
-		int aryLstNum=-1;
-		if(moveIndex.size()!=0){
-			aryLstNum = (rnd.nextInt(119)%moveIndex.size());
-		}
 		if(n==0){
-			return aryLstNum;//element num of best move
+			return index;//element num of best move
 		}
 		return maxScore;
 		
@@ -211,9 +207,9 @@ public class AIPlayer extends Player {
 		int minScore=100;
 		int alpha = maxBeta;
 		int beta = maxAlpha;
-		Board copy = new Board(iterated);
 		
 		for(int i=0;i<moves.size();i++){
+			Board copy = new Board(iterated);
 			try{
 				copy.makeMove(moves.get(i));				
 			}
