@@ -10,10 +10,8 @@ import java.util.ArrayList;
  *
  */
 public class AIPlayer extends Player {
-	
-	//Proper Practice here?
 
-	private final int DEFAULT_DEPTH = 10;
+	private final int DEFAULT_DEPTH = 40;
 	private int depth;
 	
 	/**
@@ -117,7 +115,7 @@ public class AIPlayer extends Player {
 			opposingColor = SquareStatus.BLACK;
 		}
 		
-		if(n==depth || iterated.isBoardFull()||iterated.areAvailableMoves(opposingColor)){
+		if(n==depth || iterated.isBoardFull()||!(iterated.areAvailableMoves(opposingColor))){
 			return iterated.getNumTiles(color);
 		}
 		
